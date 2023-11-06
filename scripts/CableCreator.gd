@@ -58,7 +58,7 @@ func _input(event):
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	var cursor_pos = get_viewport().get_mouse_position()
-	cable.set_point_position(cur_point, (cursor_pos - cable.global_position).snapped(Vector2i(10, 10)))
+	cable.set_point_position(cur_point, (cursor_pos - cable.global_position).snapped(Vector2i(20, 20)))
 
 
 func init(color: Color, caller_port):

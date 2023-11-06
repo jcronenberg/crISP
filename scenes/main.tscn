@@ -1,10 +1,21 @@
-[gd_scene load_steps=2 format=3 uid="uid://dl7lp14w810qj"]
+[gd_scene load_steps=3 format=3 uid="uid://dl7lp14w810qj"]
 
+[ext_resource type="Texture2D" uid="uid://xlfunc5i22gq" path="res://assets/mne_bg.png" id="1_gjcwj"]
 [ext_resource type="PackedScene" uid="uid://wn2ch8bgv060" path="res://scenes/switch.tscn" id="1_ttjah"]
 
 [node name="Main" type="Node2D"]
 
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+
+[node name="Background" type="Sprite2D" parent="Camera2D"]
+texture_repeat = 2
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("1_gjcwj")
+region_enabled = true
+region_rect = Rect2(0, 0, 20000, 20000)
+
 [node name="Cables" type="Node2D" parent="."]
 
 [node name="Switch" parent="." instance=ExtResource("1_ttjah")]
-position = Vector2(11, 11)
+position = Vector2(20, 20)
