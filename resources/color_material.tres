@@ -4,4 +4,4 @@
 
 [resource]
 shader = ExtResource("1_smaj5")
-shader_parameter/color = Color(0, 0.541176, 0, 1)
+shader_parameter/color = Color(0.556863, 0.266667, 0.678431, 1)
