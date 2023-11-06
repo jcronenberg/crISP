@@ -20,7 +20,7 @@ func _ready():
 func _input(event):
 	if event.is_action_pressed("LClick"):
 		var endpoint := false
-		
+
 		# Check if position under cursor is possible endpoint
 		var space_rid := get_world_2d().space
 		var space_state := PhysicsServer2D.space_get_direct_state(space_rid)
@@ -53,7 +53,7 @@ func _input(event):
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	var cursor_pos = get_viewport().get_mouse_position()
 	cable.set_point_position(cur_point, (cursor_pos - cable.global_position).snapped(Vector2i(10, 10)))
 

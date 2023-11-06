@@ -7,7 +7,7 @@ var connected_cable = null
 ## kind of an ugly hack to not register the click if it was connected to another port
 var just_connected := false
 
-func _input_event(viewport, event, shape_idx):
+func _input_event(_viewport, event, _shape_idx):
 	var cable_creator = cable_creator_scene.instantiate()
 	if event.is_action_pressed("LClick") and not is_connected:
 		add_child(cable_creator)
