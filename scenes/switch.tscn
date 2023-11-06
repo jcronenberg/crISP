@@ -12,7 +12,7 @@ shader_parameter/color = Color(0.870588, 0, 0, 1)
 shader = ExtResource("1_axdv7")
 shader_parameter/color = Color(0.262745, 0.407843, 0.831373, 1)
 
-[node name="Switch" type="Area2D"]
+[node name="Switch" type="Node2D"]
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
 color = Color(0, 0, 0, 1)
