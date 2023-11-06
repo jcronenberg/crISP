@@ -41,7 +41,6 @@ func _input(event):
 
 		# finish setting up cable
 		if endpoint:
-			set_process(false)
 			queue_free()
 		else:
 			cable.add_point(Vector2(0, 0))
@@ -50,6 +49,10 @@ func _input(event):
 	if event.is_action_pressed("RClick") and cur_point > 1:
 		cable.remove_point(cur_point)
 		cur_point = cur_point + 1 if reverse_order else cur_point - 1
+	elif event.is_action_pressed("RClick"):
+		cable.port1.is_connected = false
+		cable.queue_free()
+		queue_free()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

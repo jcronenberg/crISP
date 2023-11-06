@@ -1,4 +1,4 @@
 extends Line2D
 
-var port1
-var port2
+var port1 = null
+var port2 = null
