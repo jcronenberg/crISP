@@ -22,3 +22,5 @@ func _input(event):
 		global_position += (previous_pos - event.position) / zoom
 		previous_pos = event.position
 		$Background.global_position = global_position.snapped(Vector2i(20, 20))
+
+	zoom = zoom.clamp(Vector2(0.2, 0.2), Vector2(2, 2))
