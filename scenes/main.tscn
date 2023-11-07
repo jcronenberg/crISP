@@ -11,6 +11,7 @@ position = Vector2(320, 360)
 script = ExtResource("1_d2c2q")
 
 [node name="Background" type="Sprite2D" parent="Camera"]
+texture_filter = 2
 texture_repeat = 2
 scale = Vector2(0.1, 0.1)
 texture = ExtResource("1_gjcwj")
