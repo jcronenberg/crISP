@@ -33,8 +33,8 @@ func _input(event):
 		for node in nodes:
 			if "is_endpoint" in node["collider"] and not node["collider"].get_parent().is_port_connected:
 				endpoint = true
-				node["collider"].get_parent().is_port_connected = true
 				node["collider"].connected_cable = cable
+				node["collider"].get_parent().set_is_port_connected(true)
 				node["collider"].get_parent().just_connected = true
 				cable.port2 = node["collider"]
 				cable.set_point_position(cur_point, node["collider"].global_position - cable.global_position)
@@ -53,7 +53,7 @@ func _input(event):
 		cable.remove_point(cur_point)
 		cur_point = cur_point + 1 if reverse_order else cur_point - 1
 	elif event.is_action_pressed("RClick"):
-		cable.port1.get_parent().is_port_connected = false
+		cable.port1.get_parent().set_is_port_connected(false)
 		cable.queue_free()
 		queue_free()
 
