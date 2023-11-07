@@ -26,7 +26,7 @@ func _input(event):
 		var space_state := PhysicsServer2D.space_get_direct_state(space_rid)
 		var query := PhysicsPointQueryParameters2D.new()
 		query.collide_with_areas = true
-		query.position = get_viewport().get_mouse_position()
+		query.position = get_global_mouse_position()
 		query.collide_with_bodies = false
 		var nodes = space_state.intersect_point(query)
 		#print(nodes) # debug
@@ -57,7 +57,7 @@ func _input(event):
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	var cursor_pos = get_viewport().get_mouse_position()
+	var cursor_pos = get_global_mouse_position()
 	cable.set_point_position(cur_point, (cursor_pos - cable.global_position).snapped(Vector2i(20, 20)))
 
 
