@@ -7,14 +7,13 @@
 [node name="Main" type="Node2D"]
 
 [node name="Camera" type="Camera2D" parent="."]
-anchor_mode = 0
+position = Vector2(320, 360)
 script = ExtResource("1_d2c2q")
 
 [node name="Background" type="Sprite2D" parent="Camera"]
 texture_repeat = 2
 scale = Vector2(0.1, 0.1)
 texture = ExtResource("1_gjcwj")
-centered = false
 region_enabled = true
 region_rect = Rect2(0, 0, 20000, 20000)
 
@@ -22,3 +21,6 @@ region_rect = Rect2(0, 0, 20000, 20000)
 
 [node name="Switch" parent="." instance=ExtResource("1_ttjah")]
 position = Vector2(220, 160)
+
+[node name="Switch2" parent="." instance=ExtResource("1_ttjah")]
+position = Vector2(220, 480)
