@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://wn2ch8bgv060"]
+[gd_scene load_steps=11 format=3 uid="uid://wn2ch8bgv060"]
 
 [ext_resource type="PackedScene" uid="uid://dul63201md3r7" path="res://scenes/switch_port.tscn" id="1_4tnm7"]
 [ext_resource type="Material" uid="uid://b4sy36gg682sk" path="res://resources/color_material.tres" id="1_5mgf4"]
 [ext_resource type="Shader" path="res://shaders/color.gdshader" id="1_axdv7"]
+[ext_resource type="Script" path="res://scripts/SwitchPortPair.gd" id="2_16gmr"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_p68yw"]
 shader = ExtResource("1_axdv7")
@@ -37,6 +38,7 @@ polygon = PackedVector2Array(0, 0, 0, 100, 220, 100, 220, 0)
 [node name="Port1" type="Node2D" parent="."]
 material = ExtResource("1_5mgf4")
 position = Vector2(20, 0)
+script = ExtResource("2_16gmr")
 
 [node name="TopPort" parent="Port1" instance=ExtResource("1_4tnm7")]
 
@@ -46,6 +48,7 @@ position = Vector2(0, 100)
 [node name="Port2" type="Node2D" parent="."]
 material = SubResource("ShaderMaterial_p68yw")
 position = Vector2(40, 0)
+script = ExtResource("2_16gmr")
 
 [node name="TopPort" parent="Port2" instance=ExtResource("1_4tnm7")]
 
@@ -55,6 +58,7 @@ position = Vector2(0, 100)
 [node name="Port3" type="Node2D" parent="."]
 material = SubResource("ShaderMaterial_r2h8i")
 position = Vector2(60, 0)
+script = ExtResource("2_16gmr")
 
 [node name="TopPort" parent="Port3" instance=ExtResource("1_4tnm7")]
 
@@ -64,6 +68,7 @@ position = Vector2(0, 100)
 [node name="Port4" type="Node2D" parent="."]
 material = SubResource("ShaderMaterial_h4hr5")
 position = Vector2(80, 0)
+script = ExtResource("2_16gmr")
 
 [node name="TopPort" parent="Port4" instance=ExtResource("1_4tnm7")]
 
@@ -73,6 +78,7 @@ position = Vector2(0, 100)
 [node name="Port5" type="Node2D" parent="."]
 material = SubResource("ShaderMaterial_hjw3g")
 position = Vector2(100, 0)
+script = ExtResource("2_16gmr")
 
 [node name="TopPort" parent="Port5" instance=ExtResource("1_4tnm7")]
 
@@ -82,6 +88,7 @@ position = Vector2(0, 100)
 [node name="Port6" type="Node2D" parent="."]
 material = ExtResource("1_5mgf4")
 position = Vector2(120, 0)
+script = ExtResource("2_16gmr")
 
 [node name="TopPort" parent="Port6" instance=ExtResource("1_4tnm7")]
 
@@ -91,6 +98,7 @@ position = Vector2(0, 100)
 [node name="Port7" type="Node2D" parent="."]
 material = SubResource("ShaderMaterial_p68yw")
 position = Vector2(140, 0)
+script = ExtResource("2_16gmr")
 
 [node name="TopPort" parent="Port7" instance=ExtResource("1_4tnm7")]
 
@@ -100,6 +108,7 @@ position = Vector2(0, 100)
 [node name="Port8" type="Node2D" parent="."]
 material = SubResource("ShaderMaterial_r2h8i")
 position = Vector2(160, 0)
+script = ExtResource("2_16gmr")
 
 [node name="TopPort" parent="Port8" instance=ExtResource("1_4tnm7")]
 
@@ -109,6 +118,7 @@ position = Vector2(0, 100)
 [node name="Port9" type="Node2D" parent="."]
 material = SubResource("ShaderMaterial_5qncw")
 position = Vector2(180, 0)
+script = ExtResource("2_16gmr")
 
 [node name="TopPort" parent="Port9" instance=ExtResource("1_4tnm7")]
 
@@ -118,6 +128,7 @@ position = Vector2(0, 100)
 [node name="Port10" type="Node2D" parent="."]
 material = SubResource("ShaderMaterial_r3frw")
 position = Vector2(200, 0)
+script = ExtResource("2_16gmr")
 
 [node name="TopPort" parent="Port10" instance=ExtResource("1_4tnm7")]
 
