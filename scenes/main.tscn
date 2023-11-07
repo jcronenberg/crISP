@@ -18,4 +18,4 @@ region_rect = Rect2(0, 0, 20000, 20000)
 [node name="Cables" type="Node2D" parent="."]
 
 [node name="Switch" parent="." instance=ExtResource("1_ttjah")]
-position = Vector2(20, 20)
+position = Vector2(100, 100)
