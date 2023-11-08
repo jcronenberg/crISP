@@ -1,10 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://dl7lp14w810qj"]
+[gd_scene load_steps=5 format=3 uid="uid://dl7lp14w810qj"]
 
 [ext_resource type="Script" path="res://scripts/Camera.gd" id="1_d2c2q"]
 [ext_resource type="Texture2D" uid="uid://xlfunc5i22gq" path="res://assets/mne_bg.png" id="1_gjcwj"]
-[ext_resource type="PackedScene" uid="uid://wn2ch8bgv060" path="res://scenes/switch.tscn" id="1_ttjah"]
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_sf1h0"]
+[ext_resource type="PackedScene" uid="uid://dfqf20b1gvbx6" path="res://scenes/game_ui.tscn" id="4_dvlwu"]
 
 [node name="Main" type="Node2D"]
+script = ExtResource("1_sf1h0")
 
 [node name="Camera" type="Camera2D" parent="."]
 position = Vector2(320, 360)
@@ -20,8 +22,10 @@ region_rect = Rect2(0, 0, 20000, 20000)
 
 [node name="Cables" type="Node2D" parent="."]
 
-[node name="Switch" parent="." instance=ExtResource("1_ttjah")]
-position = Vector2(220, 160)
+[node name="Switches" type="Node2D" parent="."]
 
-[node name="Switch2" parent="." instance=ExtResource("1_ttjah")]
-position = Vector2(220, 480)
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="GameUI" parent="CanvasLayer" instance=ExtResource("4_dvlwu")]
+size_flags_horizontal = 0
+mouse_filter = 1

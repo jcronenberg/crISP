@@ -1,7 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://wn2ch8bgv060"]
+[gd_scene load_steps=12 format=3 uid="uid://wn2ch8bgv060"]
 
 [ext_resource type="PackedScene" uid="uid://dul63201md3r7" path="res://scenes/switch_port.tscn" id="1_4tnm7"]
 [ext_resource type="Material" uid="uid://b4sy36gg682sk" path="res://resources/color_material.tres" id="1_5mgf4"]
+[ext_resource type="Script" path="res://scripts/switch.gd" id="1_48xwx"]
 [ext_resource type="Shader" path="res://shaders/color.gdshader" id="1_axdv7"]
 [ext_resource type="Script" path="res://scripts/SwitchPortPair.gd" id="2_16gmr"]
 
@@ -30,6 +31,7 @@ shader = ExtResource("1_axdv7")
 shader_parameter/color = Color(0.584314, 0.647059, 0.65098, 1)
 
 [node name="Switch" type="Node2D"]
+script = ExtResource("1_48xwx")
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
 color = Color(0, 0, 0, 1)

@@ -1,0 +1,59 @@
+[gd_scene load_steps=4 format=3 uid="uid://dfqf20b1gvbx6"]
+
+[ext_resource type="Script" path="res://scripts/CableTypesButtons.gd" id="1_y55m6"]
+[ext_resource type="Script" path="res://scripts/NewNodesButtons.gd" id="2_eu3bg"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_2kd3i"]
+resource_name = "CableTypes"
+
+[node name="GameUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CableTypesButtons" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+grow_vertical = 0
+script = ExtResource("1_y55m6")
+
+[node name="CableCopperButton" type="Button" parent="CableTypesButtons"]
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_2kd3i")
+text = "Copper"
+
+[node name="CableFiberButton" type="Button" parent="CableTypesButtons"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_2kd3i")
+text = "Fiber"
+
+[node name="NewNodesButtons" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+script = ExtResource("2_eu3bg")
+
+[node name="NewSwitchButton" type="Button" parent="NewNodesButtons"]
+layout_mode = 2
+text = "New Switch"
+
+[connection signal="pressed" from="CableTypesButtons/CableCopperButton" to="CableTypesButtons" method="_on_cable_copper_button_pressed"]
+[connection signal="pressed" from="CableTypesButtons/CableFiberButton" to="CableTypesButtons" method="_on_cable_fiber_button_pressed"]
+[connection signal="pressed" from="NewNodesButtons/NewSwitchButton" to="NewNodesButtons" method="_on_new_switch_button_pressed"]
