@@ -29,9 +29,10 @@ func _input(event):
 		var nodes = space_state.intersect_point(query)
 		#print(nodes) # debug
 		for node in nodes:
-			if "is_endpoint" in node["collider"] and not node["collider"].get_parent().is_port_connected:
-				node["collider"].connected_cable = cable
-				node["collider"].get_parent().set_is_port_connected(true)
+			if node["collider"].name == "WANPort" or "is_endpoint" in node["collider"] and not node["collider"].get_parent().is_port_connected:
+				if node["collider"].name != "WANPort":
+					node["collider"].connected_cable = cable
+					node["collider"].get_parent().set_is_port_connected(true)
 				cable.port2 = node["collider"]
 				cable.set_point_position(cur_point, node["collider"].global_position - cable.global_position)
 				# Cable setup is finished, add to simulation and free creator

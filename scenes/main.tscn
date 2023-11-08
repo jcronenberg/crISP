@@ -1,15 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://dl7lp14w810qj"]
+[gd_scene load_steps=6 format=3 uid="uid://dl7lp14w810qj"]
 
 [ext_resource type="Script" path="res://scripts/Camera.gd" id="1_d2c2q"]
 [ext_resource type="Texture2D" uid="uid://xlfunc5i22gq" path="res://assets/mne_bg.png" id="1_gjcwj"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_sf1h0"]
 [ext_resource type="PackedScene" uid="uid://dfqf20b1gvbx6" path="res://scenes/game_ui.tscn" id="4_dvlwu"]
+[ext_resource type="PackedScene" uid="uid://c75ksq31jylr" path="res://scenes/wan_port.tscn" id="5_rumgi"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_sf1h0")
 
 [node name="Camera" type="Camera2D" parent="."]
-position = Vector2(320, 360)
 script = ExtResource("1_d2c2q")
 
 [node name="Background" type="Sprite2D" parent="Camera"]
@@ -29,3 +29,5 @@ region_rect = Rect2(0, 0, 20000, 20000)
 [node name="GameUI" parent="CanvasLayer" instance=ExtResource("4_dvlwu")]
 size_flags_horizontal = 0
 mouse_filter = 1
+
+[node name="WANPort" parent="." instance=ExtResource("5_rumgi")]

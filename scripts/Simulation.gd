@@ -60,7 +60,11 @@ func add_cable(cable_node):
 		endpoints[new_cable["con2"]]["connected_nodes"].erase(new_cable["con1"])
 
 	new_cable["con1"] = endpoint_nodes.find(cable_node.port1.get_node("../.."))
-	new_cable["con2"] = endpoint_nodes.find(cable_node.port2.get_node("../.."))
+	# if con2 is WANPort, Note WANPort is always 0 and WANPort never is con1 since it is always the end of a cable
+	if endpoint_nodes.find(cable_node.port2) != -1:
+		new_cable["con2"] = 0
+	else:
+		new_cable["con2"] = endpoint_nodes.find(cable_node.port2.get_node("../.."))
 	endpoints[new_cable["con1"]]["connected_nodes"].push_back(new_cable["con2"])
 	endpoints[new_cable["con2"]]["connected_nodes"].push_back(new_cable["con1"])
 
@@ -70,9 +74,13 @@ func _physics_process(delta):
 	delta_sum += delta
 	if delta_sum >= 1.0:
 		delta_sum = 0.0
-		print(endpoints)
+		print(endpoint_nodes)
 		print(cables)
 
 
 func _ready():
 	set_name("Simulation")
+
+	# Add WANPort as first endpoint
+	endpoint_nodes.push_back(get_node("/root/Main/WANPort"))
+	endpoints.push_back({"type": "wan_port", "connected_nodes": []})
