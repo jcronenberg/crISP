@@ -19,8 +19,6 @@ func _ready():
 
 func _input(event):
 	if event.is_action_pressed("LClick"):
-		var endpoint := false
-
 		# Check if position under cursor is possible endpoint
 		var space_rid := get_world_2d().space
 		var space_state := PhysicsServer2D.space_get_direct_state(space_rid)
@@ -32,21 +30,20 @@ func _input(event):
 		#print(nodes) # debug
 		for node in nodes:
 			if "is_endpoint" in node["collider"] and not node["collider"].get_parent().is_port_connected:
-				endpoint = true
 				node["collider"].connected_cable = cable
 				node["collider"].get_parent().set_is_port_connected(true)
 				cable.port2 = node["collider"]
 				cable.set_point_position(cur_point, node["collider"].global_position - cable.global_position)
+				# Cable setup is finished, add to simulation and free creator
+				get_node("/root/Main/Simulation").add_cable(cable)
+				queue_free()
+				return
 			# Invalid because point is a endpoint but not free
 			elif "is_endpoint" in node["collider"]:
 				return
 
-		# finish setting up cable
-		if endpoint:
-			queue_free()
-		else:
-			cable.add_point(Vector2(0, 0))
-			cur_point = cur_point - 1 if reverse_order else cur_point + 1
+		cable.add_point(Vector2(0, 0))
+		cur_point = cur_point - 1 if reverse_order else cur_point + 1
 
 	if event.is_action_pressed("RClick") and cur_point > 1:
 		cable.remove_point(cur_point)

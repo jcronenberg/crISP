@@ -13,5 +13,8 @@ func _process(_delta):
 func _input(event):
 	if event.is_action_pressed("LClick"):
 		placed = true
+		get_node("/root/Main/Simulation").add_switch(self)
+		set_process(false)
+		set_process_input(false)
 	elif event.is_action_pressed("RClick") or event.is_action_pressed("Cancel"):
 		queue_free()
