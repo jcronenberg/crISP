@@ -48,9 +48,9 @@ func add_cable(cable_node):
 		new_cable = CABLE.duplicate()
 		match cable_node.cable_type:
 			"copper":
-				new_cable["type"] = CABLE_TYPES.COPPER
+				new_cable["cable_type"] = CABLE_TYPES.COPPER
 			"fiber":
-				new_cable["type"] = CABLE_TYPES.FIBER
+				new_cable["cable_type"] = CABLE_TYPES.FIBER
 
 		cables.push_back(new_cable)
 		cable_nodes.push_back(cable_node)
