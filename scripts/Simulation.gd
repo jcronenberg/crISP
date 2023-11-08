@@ -1,0 +1,74 @@
+extends Node
+
+class_name Simulation
+
+enum CABLE_TYPES {
+	COPPER,
+	FIBER,
+	}
+enum MAX_CABLE_THROUGHPUT {
+	COPPER = 250,
+	FIBER = 1000,
+	}
+
+const SWITCH = {
+	"type": "switch",
+	"connected_nodes": [],
+	}
+const HOUSEHOLD = {
+	"type": "household",
+	"cur_bandwidth": 0,
+	"max_bandwidth": 0,
+	}
+const CABLE = {
+	"type": "cable",
+	"cable_type": CABLE_TYPES.COPPER,
+	"cur_bandwidth": 0,
+	"con1": -1,
+	"con2": -1,
+	}
+
+# Note the normal and nodes array should be kept in sync to allow a 1 to 1 mapping
+var endpoints: Array = []
+var endpoint_nodes: Array = []
+var cables: Array = []
+var cable_nodes: Array = []
+
+
+func add_switch(switch_node):
+	var new_switch = SWITCH.duplicate()
+	endpoints.push_back(new_switch)
+	endpoint_nodes.push_back(switch_node)
+
+
+func add_cable(cable_node):
+	var new_cable
+	if cables.find(cable_node) == -1:
+		new_cable = CABLE.duplicate()
+		match cable_node.cable_type:
+			"copper":
+				new_cable["type"] = CABLE_TYPES.COPPER
+			"fiber":
+				new_cable["type"] = CABLE_TYPES.FIBER
+
+		cables.push_back(new_cable)
+		cable_nodes.push_back(cable_node)
+	else:
+		new_cable = cable_nodes[cables.find(cable_node)]
+
+	print(cable_node.port1.get_node("../.."))
+	new_cable["con1"] = endpoint_nodes.find(cable_node.port1.get_node("../.."))
+	new_cable["con2"] = endpoint_nodes.find(cable_node.port2.get_node("../.."))
+
+
+var delta_sum := 0.0
+func _physics_process(delta):
+	delta_sum += delta
+	if delta_sum >= 1.0:
+		delta_sum = 0.0
+		print(endpoint_nodes)
+		print(cables)
+
+
+func _ready():
+	set_name("Simulation")
