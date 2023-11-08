@@ -11,16 +11,17 @@ enum MAX_CABLE_THROUGHPUT {
 	FIBER = 1000,
 	}
 
-const SWITCH = {
+var SWITCH = {
 	"type": "switch",
 	"connected_nodes": [],
 	}
-const HOUSEHOLD = {
+var HOUSEHOLD = {
 	"type": "household",
+	"connected_nodes": [],
 	"cur_bandwidth": 0,
 	"max_bandwidth": 0,
 	}
-const CABLE = {
+var CABLE = {
 	"type": "cable",
 	"cable_type": CABLE_TYPES.COPPER,
 	"cur_bandwidth": 0,
@@ -36,7 +37,7 @@ var cable_nodes: Array = []
 
 
 func add_switch(switch_node):
-	var new_switch = SWITCH.duplicate()
+	var new_switch = SWITCH.duplicate(true)
 	endpoints.push_back(new_switch)
 	endpoint_nodes.push_back(switch_node)
 
@@ -55,10 +56,13 @@ func add_cable(cable_node):
 		cable_nodes.push_back(cable_node)
 	else:
 		new_cable = cable_nodes[cables.find(cable_node)]
+		endpoints[new_cable["con1"]]["connected_nodes"].erase(new_cable["con2"])
+		endpoints[new_cable["con2"]]["connected_nodes"].erase(new_cable["con1"])
 
-	print(cable_node.port1.get_node("../.."))
 	new_cable["con1"] = endpoint_nodes.find(cable_node.port1.get_node("../.."))
 	new_cable["con2"] = endpoint_nodes.find(cable_node.port2.get_node("../.."))
+	endpoints[new_cable["con1"]]["connected_nodes"].push_back(new_cable["con2"])
+	endpoints[new_cable["con2"]]["connected_nodes"].push_back(new_cable["con1"])
 
 
 var delta_sum := 0.0
@@ -66,7 +70,7 @@ func _physics_process(delta):
 	delta_sum += delta
 	if delta_sum >= 1.0:
 		delta_sum = 0.0
-		print(endpoint_nodes)
+		print(endpoints)
 		print(cables)
 
 
