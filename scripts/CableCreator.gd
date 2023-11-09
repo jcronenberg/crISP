@@ -3,7 +3,6 @@ extends Node2D
 var cable_scene = preload("res://scenes/cable.tscn")
 var cable = null
 var cur_point := 0
-var reverse_order := false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -44,11 +43,11 @@ func _input(event):
 				return
 
 		cable.add_point(Vector2(0, 0))
-		cur_point = cur_point - 1 if reverse_order else cur_point + 1
+		cur_point = cur_point + 1
 
 	if event.is_action_pressed("RClick") and cur_point > 1:
 		cable.remove_point(cur_point)
-		cur_point = cur_point + 1 if reverse_order else cur_point - 1
+		cur_point = cur_point - 1
 	elif event.is_action_pressed("RClick"):
 		cable.port1.get_parent().set_is_port_connected(false)
 		cable.queue_free()
