@@ -120,7 +120,7 @@ func allocate_bandwidth(from_endpoint_idx: int, to_endpoint_idx: int, bandwidth:
 				var new_bandwidth = cable["cur_bandwidth"]
 				new_bandwidth += bandwidth
 				if new_bandwidth > max_bandwidth:
-					bandwidth = max_bandwidth - new_bandwidth
+					bandwidth = new_bandwidth - max_bandwidth
 					cable["cur_bandwidth"] = max_bandwidth
 				else:
 					cable["cur_bandwidth"] = new_bandwidth
@@ -160,11 +160,12 @@ func _physics_process(delta):
 	delta_sum += delta
 	if delta_sum >= 1.0:
 		delta_sum = 0.0
-		# print(endpoints)
-		# print(cables)
+		# print("endpoints: ", endpoints)
+		# print("cables: ", cables)
 		# for i in endpoints.size():
 		# 	print("shortest path for endpoint: ", i)
 		# 	print(path_calculator.get_id_path(i, 0))
+		# print()
 
 
 func _ready():
