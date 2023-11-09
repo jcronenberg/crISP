@@ -88,13 +88,6 @@ func add_cable(cable_node):
 	for con in ["con1", "con2"]:
 		if endpoints[new_cable[con]]["type"] == "house":
 			allocate_house_bandwidth(endpoints[new_cable[con]])
-	# if endpoints[new_cable["con2"]]["wan_connections"].size() > 0:
-	# 	endpoints[new_cable["con1"]]["wan_connections"].push_back(new_cable["con2"])
-	# 	update_wan_connections(new_cable["con1"], true)
-
-	# if endpoints[new_cable["con1"]]["wan_connections"].size() > 0:
-	# 	endpoints[new_cable["con2"]]["wan_connections"].push_back(new_cable["con1"])
-	# 	update_wan_connections(new_cable["con2"], true)
 
 
 func allocate_house_bandwidth(house):
@@ -142,18 +135,6 @@ func free_bandwidth(from_endpoint_idx: int, to_endpoint_idx: int, bandwidth: int
 				else:
 					cable[con]["cur_bandwidth"] = new_bandwidth
 					return
-
-
-func update_wan_connections(idx: int, wan_connected: bool):
-	for connected_node_idx in endpoints[idx]["connected_nodes"]:
-		if connected_node_idx == idx:
-			continue
-		if wan_connected and endpoints[connected_node_idx]["wan_connections"].find(idx) == -1:
-			endpoints[connected_node_idx]["wan_connections"].push_back(idx)
-			update_wan_connections(connected_node_idx, wan_connected)
-		elif not wan_connected and endpoints[connected_node_idx]["wan_connections"].find(idx) >= 0:
-			endpoints[connected_node_idx]["wan_connections"].erase(idx)
-			update_wan_connections(connected_node_idx, wan_connected)
 
 
 var delta_sum := 0.0
