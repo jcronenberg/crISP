@@ -104,6 +104,7 @@ func allocate_house_bandwidth(house):
 			house["bandwidth_allocated"] = true
 		else:
 			print("Over bandwidth limit")
+			return
 
 
 # returns left over bandwidth
