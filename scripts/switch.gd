@@ -5,8 +5,6 @@ var placed := false
 func _process(_delta):
 	if not placed:
 		global_position = get_global_mouse_position()
-		global_position.x -= 110
-		global_position.y -= 50
 		global_position = global_position.snapped(Vector2i(20, 20))
 
 
