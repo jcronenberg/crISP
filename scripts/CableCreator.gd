@@ -61,7 +61,6 @@ func _process(_delta):
 	cable.set_point_position(cur_point, (cursor_pos - cable.global_position).snapped(Vector2i(20, 20)))
 
 
-func init(color: Color, caller_port):
-	cable.default_color = color
+func init(caller_port):
 	cable.port1 = caller_port
 	caller_port.connected_cable = cable

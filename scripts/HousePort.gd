@@ -5,7 +5,7 @@ const is_endpoint := true
 var connected_cable = null
 
 func get_real_parent():
-	return get_node("../..")
+	return get_parent()
 
 
 func _input_event(_viewport, event, _shape_idx):

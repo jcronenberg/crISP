@@ -24,6 +24,8 @@ region_rect = Rect2(0, 0, 20000, 20000)
 
 [node name="Switches" type="Node2D" parent="."]
 
+[node name="Houses" type="Node2D" parent="."]
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="GameUI" parent="CanvasLayer" instance=ExtResource("4_dvlwu")]

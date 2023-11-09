@@ -54,6 +54,11 @@ script = ExtResource("2_eu3bg")
 layout_mode = 2
 text = "New Switch"
 
+[node name="NewHouseButton" type="Button" parent="NewNodesButtons"]
+layout_mode = 2
+text = "New House"
+
 [connection signal="pressed" from="CableTypesButtons/CableCopperButton" to="CableTypesButtons" method="_on_cable_copper_button_pressed"]
 [connection signal="pressed" from="CableTypesButtons/CableFiberButton" to="CableTypesButtons" method="_on_cable_fiber_button_pressed"]
 [connection signal="pressed" from="NewNodesButtons/NewSwitchButton" to="NewNodesButtons" method="_on_new_switch_button_pressed"]
+[connection signal="pressed" from="NewNodesButtons/NewHouseButton" to="NewNodesButtons" method="_on_new_house_button_pressed"]
