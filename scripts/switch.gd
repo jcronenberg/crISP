@@ -4,8 +4,7 @@ var placed := false
 
 func _process(_delta):
 	if not placed:
-		global_position = get_global_mouse_position()
-		global_position = global_position.snapped(Vector2i(20, 20))
+		global_position = get_global_mouse_position().snapped(Vector2i(20, 20)) + Vector2(10, 10)
 
 
 func _input(event):
