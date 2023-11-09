@@ -1,10 +1,14 @@
-[gd_scene load_steps=12 format=3 uid="uid://wn2ch8bgv060"]
+[gd_scene load_steps=14 format=3 uid="uid://wn2ch8bgv060"]
 
 [ext_resource type="PackedScene" uid="uid://dul63201md3r7" path="res://scenes/switch_port.tscn" id="1_4tnm7"]
 [ext_resource type="Material" uid="uid://b4sy36gg682sk" path="res://resources/color_material.tres" id="1_5mgf4"]
 [ext_resource type="Script" path="res://scripts/switch.gd" id="1_48xwx"]
 [ext_resource type="Shader" path="res://shaders/color.gdshader" id="1_axdv7"]
+[ext_resource type="Script" path="res://scripts/SwitchBodyArea.gd" id="2_6rqyi"]
 [ext_resource type="Script" path="res://scripts/SwitchPortPair.gd" id="2_16gmr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lj5gn"]
+size = Vector2(220, 100)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_p68yw"]
 shader = ExtResource("1_axdv7")
@@ -33,9 +37,15 @@ shader_parameter/color = Color(0.584314, 0.647059, 0.65098, 1)
 [node name="Switch" type="Node2D"]
 script = ExtResource("1_48xwx")
 
-[node name="Polygon2D" type="Polygon2D" parent="."]
+[node name="SwitchBodyArea" type="Area2D" parent="."]
+script = ExtResource("2_6rqyi")
+
+[node name="SwitchBody" type="Polygon2D" parent="SwitchBodyArea"]
 color = Color(0, 0, 0, 1)
 polygon = PackedVector2Array(-110, -50, -110, 50, 110, 50, 110, -50)
+
+[node name="SwitchBodyCollision" type="CollisionShape2D" parent="SwitchBodyArea"]
+shape = SubResource("RectangleShape2D_lj5gn")
 
 [node name="Port1" type="Node2D" parent="."]
 material = ExtResource("1_5mgf4")

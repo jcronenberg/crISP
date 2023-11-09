@@ -5,7 +5,9 @@ extends HBoxContainer
 
 func _on_new_switch_button_pressed():
 	get_node("/root/Main/Switches").add_child(new_switch.instantiate())
+	get_node("/root/UiController").cursor_mode = "cable"
 
 
 func _on_new_house_button_pressed():
 	get_node("/root/Main/Houses").add_child(new_house.instantiate())
+	get_node("/root/UiController").cursor_mode = "cable"

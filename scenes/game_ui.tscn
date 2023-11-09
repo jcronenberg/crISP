@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://dfqf20b1gvbx6"]
+[gd_scene load_steps=5 format=3 uid="uid://dfqf20b1gvbx6"]
 
 [ext_resource type="Script" path="res://scripts/CableTypesButtons.gd" id="1_y55m6"]
 [ext_resource type="Script" path="res://scripts/NewNodesButtons.gd" id="2_eu3bg"]
+[ext_resource type="Script" path="res://scripts/CursorModeButtons.gd" id="3_2mpmd"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_2kd3i"]
 resource_name = "CableTypes"
@@ -58,7 +59,31 @@ text = "New Switch"
 layout_mode = 2
 text = "New House"
 
+[node name="CursorModeButtons" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -198.0
+offset_bottom = 40.0
+grow_horizontal = 0
+script = ExtResource("3_2mpmd")
+
+[node name="DeleteCableButton" type="Button" parent="CursorModeButtons"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_2kd3i")
+text = "Delete Cable"
+
+[node name="MoveSwitchButton" type="Button" parent="CursorModeButtons"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_2kd3i")
+text = "Move Switch"
+
 [connection signal="pressed" from="CableTypesButtons/CableCopperButton" to="CableTypesButtons" method="_on_cable_copper_button_pressed"]
 [connection signal="pressed" from="CableTypesButtons/CableFiberButton" to="CableTypesButtons" method="_on_cable_fiber_button_pressed"]
 [connection signal="pressed" from="NewNodesButtons/NewSwitchButton" to="NewNodesButtons" method="_on_new_switch_button_pressed"]
 [connection signal="pressed" from="NewNodesButtons/NewHouseButton" to="NewNodesButtons" method="_on_new_house_button_pressed"]
+[connection signal="pressed" from="CursorModeButtons/DeleteCableButton" to="CursorModeButtons" method="_on_delete_cable_button_pressed"]
+[connection signal="pressed" from="CursorModeButtons/MoveSwitchButton" to="CursorModeButtons" method="_on_move_switch_button_pressed"]

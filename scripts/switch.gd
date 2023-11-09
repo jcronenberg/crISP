@@ -14,5 +14,6 @@ func _input(event):
 		get_node("/root/Main/Simulation").add_switch(self, global_position)
 		set_process(false)
 		set_process_input(false)
+		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("RClick") or event.is_action_pressed("Cancel"):
 		queue_free()
