@@ -15,3 +15,7 @@ func _input_event(_viewport, event, _shape_idx):
 		add_child(cable_creator)
 		cable_creator.init(self)
 		get_parent().set_is_port_connected(true)
+	elif event.is_action_pressed("LClick") and connected_cable and ui_controller.cursor_mode == "delete_cable":
+		get_node("/root/Main/Simulation").delete_cable(connected_cable)
+		connected_cable.queue_free()
+		connected_cable = null

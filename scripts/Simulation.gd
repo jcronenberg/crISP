@@ -137,17 +137,32 @@ func free_bandwidth(from_endpoint_idx: int, to_endpoint_idx: int, bandwidth: int
 					return
 
 
+func delete_cable(cable_node):
+	var cable_node_idx = cable_nodes.find(cable_node)
+	if cable_node_idx == -1:
+		push_error("Couldn't find cable (", cable_node, ") to delete in simulation")
+		return
+	var cable_sim = cables[cable_node_idx]
+	for endpoint in endpoints:
+		for cable in endpoint["cables"]:
+			if cable == cable_sim:
+				endpoint["cables"].erase(cable)
+
+	cables.remove_at(cable_node_idx)
+	cable_nodes.remove_at(cable_node_idx)
+
+
 var delta_sum := 0.0
 func _physics_process(delta):
 	delta_sum += delta
 	if delta_sum >= 1.0:
 		delta_sum = 0.0
-		# print("endpoints: ", endpoints)
-		# print("cables: ", cables)
+		print("endpoints: ", endpoints)
+		print("cables: ", cables)
 		# for i in endpoints.size():
 		# 	print("shortest path for endpoint: ", i)
 		# 	print(path_calculator.get_id_path(i, 0))
-		# print()
+		print()
 
 
 func _ready():
