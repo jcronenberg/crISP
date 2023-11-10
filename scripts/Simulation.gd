@@ -76,7 +76,6 @@ func add_cable(cable_node):
 	else:
 		new_cable["con2"] = endpoint_nodes.find(cable_node.port2.get_real_parent())
 
-	connect_cable(new_cable)
 	endpoints[new_cable["con1"]]["cables"].push_back(new_cable)
 	endpoints[new_cable["con2"]]["cables"].push_back(new_cable)
 
