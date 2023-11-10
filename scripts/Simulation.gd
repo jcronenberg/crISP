@@ -59,21 +59,15 @@ func add_house(house_node, pos: Vector2):
 
 
 func add_cable(cable_node):
-	var new_cable
-	if cables.find(cable_node) == -1:
-		new_cable = CABLE.duplicate()
-		match cable_node.cable_type:
-			"copper":
-				new_cable["cable_type"] = CABLE_TYPES.COPPER
-			"fiber":
-				new_cable["cable_type"] = CABLE_TYPES.FIBER
+	var new_cable = CABLE.duplicate(true)
+	match cable_node.cable_type:
+		"copper":
+			new_cable["cable_type"] = CABLE_TYPES.COPPER
+		"fiber":
+			new_cable["cable_type"] = CABLE_TYPES.FIBER
 
-		cables.push_back(new_cable)
-		cable_nodes.push_back(cable_node)
-	else:
-		new_cable = cable_nodes[cables.find(cable_node)]
-		endpoints[new_cable["con1"]]["connected_nodes"].erase(new_cable["con2"])
-		endpoints[new_cable["con2"]]["connected_nodes"].erase(new_cable["con1"])
+	cables.push_back(new_cable)
+	cable_nodes.push_back(cable_node)
 
 	new_cable["con1"] = endpoint_nodes.find(cable_node.port1.get_real_parent())
 	# if con2 is WANPort, Note WANPort is always 0 and WANPort never is con1 since it is always the end of a cable
