@@ -81,6 +81,19 @@ toggle_mode = true
 button_group = SubResource("ButtonGroup_2kd3i")
 text = "Move Switch"
 
+[node name="WarningLabel" type="Label" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -33.0
+offset_right = 33.0
+offset_bottom = 26.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "Warning"
+
 [connection signal="pressed" from="CableTypesButtons/CableCopperButton" to="CableTypesButtons" method="_on_cable_copper_button_pressed"]
 [connection signal="pressed" from="CableTypesButtons/CableFiberButton" to="CableTypesButtons" method="_on_cable_fiber_button_pressed"]
 [connection signal="pressed" from="NewNodesButtons/NewSwitchButton" to="NewNodesButtons" method="_on_new_switch_button_pressed"]

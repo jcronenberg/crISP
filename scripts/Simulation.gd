@@ -1,5 +1,7 @@
 extends Node
 
+## TODO
+## Switches don't get moved in path_calculator when they get moved in 2d space
 class_name Simulation
 
 enum CABLE_TYPES {
@@ -86,13 +88,13 @@ func connect_cable(cable):
 	path_calculator.connect_points(cable["con1"], cable["con2"])
 
 
-func allocate_house_bandwidth(house):
+# Returns if allocation was successful
+func allocate_house_bandwidth(house) -> bool:
 	while house["allocated_bandwidth"] < house["cur_bandwidth"]:
 		var path := path_calculator.get_id_path(endpoints.find(house), 0)
 		var bandwidth_allocated := true
 		if path.size() == 0:
-			print("House: ", house, " isn't satisfied")
-			return
+			return false
 		for i in path.size() - 1:
 			if allocate_bandwidth(path[i], path[i + 1], 50) != 0:
 				bandwidth_allocated = false
@@ -100,6 +102,8 @@ func allocate_house_bandwidth(house):
 				break
 		if bandwidth_allocated:
 			house["allocated_bandwidth"] += 50
+
+	return true
 
 
 # returns left over bandwidth
@@ -168,8 +172,15 @@ func reset_bandwidth_state():
 
 
 func allocate_houses():
+	var allocation_successful := true
 	for house in houses:
-		allocate_house_bandwidth(house)
+		if not allocate_house_bandwidth(house):
+			allocation_successful = false
+
+	if allocation_successful:
+		get_node("/root/UiController").hide_warning()
+	else:
+		get_node("/root/UiController").display_warning("Warning")
 
 
 var delta_sum := 0.0

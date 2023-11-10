@@ -1,5 +1,9 @@
 extends Node2D
 
+## TODO
+## Switches shouldn't be possible to overlap
+class_name Switch
+
 var placed := false
 
 func _process(_delta):
