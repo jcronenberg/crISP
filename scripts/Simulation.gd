@@ -118,8 +118,10 @@ func allocate_bandwidth(from_endpoint_idx: int, to_endpoint_idx: int, bandwidth:
 				if new_bandwidth > max_bandwidth:
 					bandwidth = new_bandwidth - max_bandwidth
 					cable["cur_bandwidth"] = max_bandwidth
+					cable_nodes[cables.find(cable)].update_cur_bandwidth(cable["cur_bandwidth"])
 				else:
 					cable["cur_bandwidth"] = new_bandwidth
+					cable_nodes[cables.find(cable)].update_cur_bandwidth(cable["cur_bandwidth"])
 					return 0
 
 	return bandwidth
@@ -156,6 +158,8 @@ func delete_cable(cable_node):
 
 
 func reset_bandwidth_state():
+	for cable_node in cable_nodes:
+		cable_node.update_cur_bandwidth(0)
 	for cable in cables:
 		cable["cur_bandwidth"] = 0
 		connect_cable(cable)
