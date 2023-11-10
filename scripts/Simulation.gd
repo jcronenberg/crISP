@@ -2,6 +2,13 @@ extends Node
 
 ## TODO
 ## Switches don't get moved in path_calculator when they get moved in 2d space
+##
+## When a house couldn't get a connection it still up to the point where the allocation failed allocated
+## bandwidth until that cable. So e.g. if path is [5, 2, 0] and 5 is successful but 2 not then 5 would still
+## get allocated 50. Not a trivial change because theoretically we would need to go back and change already
+## allocated bandwidth. However I don't think this is a priority as the plan currently is to start a fail
+## countdown when a house isn't connected anyway, so this enhancement would only really help in identifying
+## issues in the network a bit better.
 class_name Simulation
 
 enum CABLE_TYPES {
