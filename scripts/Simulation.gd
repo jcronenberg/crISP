@@ -21,7 +21,7 @@ var HOUSE = {
 	"cables": [],
 	"cur_bandwidth": 0,
 	"max_bandwidth": 0,
-	"allocated_bandwidth": false,
+	"allocated_bandwidth": 0,
 	}
 var CABLE = {
 	"type": "cable",
@@ -80,24 +80,33 @@ func add_cable(cable_node):
 	if endpoint_nodes.find(cable_node.port2) != -1:
 		new_cable["con2"] = 0
 	else:
-		new_cable["con2"] = endpoint_nodes.find(cable_node.port2.get_node("../.."))
+		new_cable["con2"] = endpoint_nodes.find(cable_node.port2.get_real_parent())
 
-	path_calculator.connect_points(new_cable["con1"], new_cable["con2"])
+	connect_cable(new_cable)
 	endpoints[new_cable["con1"]]["cables"].push_back(new_cable)
 	endpoints[new_cable["con2"]]["cables"].push_back(new_cable)
-	for con in ["con1", "con2"]:
-		if endpoints[new_cable[con]]["type"] == "house":
-			allocate_house_bandwidth(endpoints[new_cable[con]])
+
+
+# Pretty much a wrapper around path_calculator.connect_points()
+# but more specialised to automatically connect cable con1 and con2
+func connect_cable(cable):
+	path_calculator.connect_points(cable["con1"], cable["con2"])
 
 
 func allocate_house_bandwidth(house):
-	var path = path_calculator.get_id_path(endpoints.find(house), 0)
-	for i in path.size() - 1:
-		if allocate_bandwidth(path[i], path[i + 1], house["cur_bandwidth"]) == 0:
-			house["bandwidth_allocated"] = true
-		else:
-			print("Over bandwidth limit")
+	while house["allocated_bandwidth"] < house["cur_bandwidth"]:
+		var path := path_calculator.get_id_path(endpoints.find(house), 0)
+		var bandwidth_allocated := true
+		if path.size() == 0:
+			print("House: ", house, " isn't satisfied")
 			return
+		for i in path.size() - 1:
+			if allocate_bandwidth(path[i], path[i + 1], 50) != 0:
+				bandwidth_allocated = false
+				path_calculator.disconnect_points(path[i], path[i + 1])
+				break
+		if bandwidth_allocated:
+			house["allocated_bandwidth"] += 50
 
 
 # returns left over bandwidth
@@ -123,6 +132,7 @@ func allocate_bandwidth(from_endpoint_idx: int, to_endpoint_idx: int, bandwidth:
 	return bandwidth
 
 
+# Currently unused but may be a better approach if performance starts to be a problem
 func free_bandwidth(from_endpoint_idx: int, to_endpoint_idx: int, bandwidth: int):
 	for cable in endpoints[from_endpoint_idx]["cables"]:
 		for con in ["con1", "con2"]:
@@ -152,17 +162,32 @@ func delete_cable(cable_node):
 	cable_nodes.remove_at(cable_node_idx)
 
 
+func reset_bandwidth_state():
+	for cable in cables:
+		cable["cur_bandwidth"] = 0
+		connect_cable(cable)
+	for house in houses:
+		house["allocated_bandwidth"] = 0
+
+
+func allocate_houses():
+	for house in houses:
+		allocate_house_bandwidth(house)
+
+
 var delta_sum := 0.0
 func _physics_process(delta):
 	delta_sum += delta
 	if delta_sum >= 1.0:
 		delta_sum = 0.0
-		print("endpoints: ", endpoints)
-		print("cables: ", cables)
+		reset_bandwidth_state()
+		allocate_houses()
+		# print("endpoints: ", endpoints)
+		# print("cables: ", cables)
 		# for i in endpoints.size():
 		# 	print("shortest path for endpoint: ", i)
 		# 	print(path_calculator.get_id_path(i, 0))
-		print()
+		# print()
 
 
 func _ready():
