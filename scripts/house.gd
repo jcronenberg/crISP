@@ -3,7 +3,8 @@ extends Node2D
 var is_port_connected := false
 var placed := false
 
-func set_connected_state(state: bool):
+## Colors the house either red (state: true) or black (state: false)
+func set_allocated_state(state: bool):
 	if state:
 		material.set_shader_parameter("color", Color(0, 0, 0)) # black
 	else:

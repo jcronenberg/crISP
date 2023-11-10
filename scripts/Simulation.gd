@@ -182,10 +182,10 @@ func allocate_houses():
 	var allocation_successful := true
 	for house in houses:
 		if not allocate_house_bandwidth(house):
-			endpoint_nodes[endpoints.find(house)].set_connected_state(false)
+			endpoint_nodes[endpoints.find(house)].set_allocated_state(false)
 			allocation_successful = false
 		else:
-			endpoint_nodes[endpoints.find(house)].set_connected_state(true)
+			endpoint_nodes[endpoints.find(house)].set_allocated_state(true)
 
 	if allocation_successful:
 		get_node("/root/UiController").hide_warning()
