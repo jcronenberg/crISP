@@ -3,8 +3,16 @@ extends Node2D
 var is_port_connected := false
 var placed := false
 
+func set_connected_state(state: bool):
+	if state:
+		material.set_shader_parameter("color", Color(0, 0, 0)) # black
+	else:
+		material.set_shader_parameter("color", Color(1, 0, 0)) # red
+
+
 func set_is_port_connected(state):
 	is_port_connected = state
+
 
 func _process(_delta):
 	if not placed:

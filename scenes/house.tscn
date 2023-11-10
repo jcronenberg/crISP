@@ -1,17 +1,34 @@
-[gd_scene load_steps=6 format=3 uid="uid://dkd7nmxly4jfr"]
+[gd_scene load_steps=8 format=3 uid="uid://dkd7nmxly4jfr"]
 
 [ext_resource type="Script" path="res://scripts/house.gd" id="1_bgkyf"]
 [ext_resource type="Texture2D" uid="uid://c8y4is7v17o83" path="res://assets/house.png" id="1_haugj"]
 [ext_resource type="Script" path="res://scripts/HousePort.gd" id="2_n4o5h"]
 [ext_resource type="Texture2D" uid="uid://gxgi3r43dh4q" path="res://assets/black_circle.png" id="2_warac"]
 
+[sub_resource type="Shader" id="Shader_o8l8m"]
+code = "shader_type canvas_item;
+
+uniform vec4 color : source_color;
+
+void fragment() {
+    COLOR.rgb = color.rgb;
+    COLOR.a = texture(TEXTURE, UV).a;
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xai6s"]
+resource_local_to_scene = true
+shader = SubResource("Shader_o8l8m")
+shader_parameter/color = Color(1, 0, 0, 1)
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_34dc3"]
 radius = 5.0
 
 [node name="House" type="Node2D"]
+material = SubResource("ShaderMaterial_xai6s")
 script = ExtResource("1_bgkyf")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+use_parent_material = true
 position = Vector2(0, -5)
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("1_haugj")
