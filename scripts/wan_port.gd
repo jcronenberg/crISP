@@ -1,10 +1,11 @@
-extends Area2D
+extends Port
 
 class_name WanPort
 
 const is_port_connected := false
-const is_endpoint := true
-const connected_cable = null
+
+func _input_event(_viewport, _event, _shape_idx):
+	pass
 
 # Nothing to do here
 func disconnect_port():
