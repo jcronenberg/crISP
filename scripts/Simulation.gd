@@ -99,43 +99,76 @@ func connect_cable(cable):
 func allocate_house_bandwidth(house) -> bool:
 	while house["allocated_bandwidth"] < house["cur_bandwidth"]:
 		var path := path_calculator.get_id_path(endpoints.find(house), 0)
-		var bandwidth_allocated := true
 		if path.size() == 0:
 			return false
-		for i in path.size() - 1:
-			if allocate_bandwidth(path[i], path[i + 1], 50) != 0:
-				bandwidth_allocated = false
-				path_calculator.disconnect_points(path[i], path[i + 1])
-				break
-		if bandwidth_allocated:
-			house["allocated_bandwidth"] += 50
+		var cable_path = get_cables_for_path(path)
+		if not cable_path:
+			continue
+
+		for cable in cable_path:
+			cable["cur_bandwidth"] += 50
+			cable_nodes[cables.find(cable)].update_cur_bandwidth(cable["cur_bandwidth"])
+
+		house["allocated_bandwidth"] += 50
 
 	return true
 
 
-# returns left over bandwidth
-func allocate_bandwidth(from_endpoint_idx: int, to_endpoint_idx: int, bandwidth: int) -> int:
-	for cable in endpoints[from_endpoint_idx]["cables"]:
-		for con in ["con1", "con2"]:
-			if cable[con] == to_endpoint_idx:
-				var max_bandwidth
-				match cable["cable_type"]:
-					CABLE_TYPES.COPPER:
-						max_bandwidth = MAX_CABLE_BANDWIDTH.COPPER
-					CABLE_TYPES.FIBER:
-						max_bandwidth = MAX_CABLE_BANDWIDTH.FIBER
-				var new_bandwidth = cable["cur_bandwidth"]
-				new_bandwidth += bandwidth
-				if new_bandwidth > max_bandwidth:
-					bandwidth = new_bandwidth - max_bandwidth
-					cable["cur_bandwidth"] = max_bandwidth
-					cable_nodes[cables.find(cable)].update_cur_bandwidth(cable["cur_bandwidth"])
-				else:
-					cable["cur_bandwidth"] = new_bandwidth
-					cable_nodes[cables.find(cable)].update_cur_bandwidth(cable["cur_bandwidth"])
-					return 0
+func get_cables_for_path(path: Array):
+	var cables_array := []
+	for i in path.size() - 1:
+		var found_free_cable := false
+		for cable in endpoints[path[i]]["cables"]:
+			for con in ["con1", "con2"]:
+				if cable[con] == path[i + 1] and not found_free_cable:
+					var max_bandwidth
+					match cable["cable_type"]:
+						CABLE_TYPES.COPPER:
+							max_bandwidth = MAX_CABLE_BANDWIDTH.COPPER
+						CABLE_TYPES.FIBER:
+							max_bandwidth = MAX_CABLE_BANDWIDTH.FIBER
+					if cable["cur_bandwidth"] >= max_bandwidth:
+						continue
 
-	return bandwidth
+					cables_array.push_back(cable)
+					found_free_cable = true
+
+		if not found_free_cable:
+			path_calculator.disconnect_points(path[i], path[i + 1])
+			return null
+
+	return cables_array
+
+
+# TODO probably better to return the cable that has free bandwidth or null if none are available
+# that way we can store the cable and only allocate the bandwidth when the right cable is selected
+# although now that I'm thinking about it, the a star algo should only show valid routes
+# maybe the problem is that the astar update happens too late??
+# maybe there is a way here to continue checking the cables and if it is the last cable and
+# the bandwidth it allocated to disconnect the points, smth like that.
+# returns left over bandwidth
+# func allocate_bandwidth(from_endpoint_idx: int, to_endpoint_idx: int) -> bool:
+# 	var allocated := false
+# 	for cable in endpoints[from_endpoint_idx]["cables"]:
+# 		for con in ["con1", "con2"]:
+# 			if cable[con] == to_endpoint_idx:
+# 				var max_bandwidth
+# 				match cable["cable_type"]:
+# 					CABLE_TYPES.COPPER:
+# 						max_bandwidth = MAX_CABLE_BANDWIDTH.COPPER
+# 					CABLE_TYPES.FIBER:
+# 						max_bandwidth = MAX_CABLE_BANDWIDTH.FIBER
+# 				if cable["cur_bandwidth"] == max_bandwidth:
+# 					continue
+
+# 				cable["cur_bandwidth"] += 50
+# 				cable_nodes[cables.find(cable)].update_cur_bandwidth(cable["cur_bandwidth"])
+# 				allocated = true
+
+# 	if not allocated:
+# 		path_calculator.disconnect_points(from_endpoint_idx, to_endpoint_idx)
+
+# 	return allocated
 
 
 # Currently unused but may be a better approach if performance starts to be a problem
