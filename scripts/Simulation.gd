@@ -47,7 +47,7 @@ var cables: Array = []
 var cable_nodes: Array = []
 var houses: Array = []
 
-var path_calculator: AStar2D = AStar2D.new()
+var path_calculator: NetworkAStar = NetworkAStar.new()
 
 
 func add_switch(switch_node, pos: Vector2):
@@ -248,3 +248,18 @@ func _ready():
 	endpoint_nodes.push_back(get_node("/root/Main/WANPort"))
 	endpoints.push_back({"type": "wan_port", "connected_nodes": [], "cables": [], "path_pos": Vector2(0, 0)})
 	path_calculator.add_point(0, Vector2(0, 0))
+
+
+## A simple fewest hops pathfinder
+##
+## Simply replaces all the path finding cost heuristic calculations of [AStar2D]
+## to always return 0 thus it basically ignores the coordinates and always
+## calculates fewest hops which is exactly what we want for a simple network.
+class NetworkAStar extends AStar2D:
+
+	func _compute_cost(_from_id: int, _to_id: int) -> float:
+		return 0
+
+
+	func _estimate_cost(_from_id: int, _to_id: int) -> float:
+		return 0
