@@ -1,4 +1,4 @@
-class_name Port
+class_name PortNode
 extends Area2D
 
 var cable_creator_scene = preload("res://src/cables/cable_creator.tscn")

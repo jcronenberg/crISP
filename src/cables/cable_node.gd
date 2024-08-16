@@ -1,10 +1,11 @@
+class_name CableNode
 extends Line2D
 
-var port1 = null
-var port2 = null
-var cable_type := "fiber"
-var max_bandwidth := 1000
-var cur_bandwidth := 0
+var port1: PortNode = null
+var port2: PortNode = null
+var cable_type: String = "fiber"
+var max_bandwidth: int = 1000
+var cur_bandwidth: int = 0
 @onready var cable_gradient = load("res://resources/cable_gradient.tres")
 
 func _ready():

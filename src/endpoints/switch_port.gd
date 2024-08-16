@@ -1,5 +1,5 @@
 class_name SwitchPort
-extends Port
+extends PortNode
 
 func get_real_parent():
 	return get_node("../..")

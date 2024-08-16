@@ -1,7 +1,7 @@
 extends Node2D
 
-var cable_scene = preload("res://src/cables/cable.tscn")
-var cable = null
+const cable_scene = preload("res://src/cables/cable_node.tscn")
+var cable: CableNode = null
 var cur_point := 0
 
 # Called when the node enters the scene tree for the first time.
@@ -28,7 +28,10 @@ func _input(event):
 		var nodes = space_state.intersect_point(query)
 		#print(nodes) # debug
 		for node in nodes:
-			if node["collider"].name == "WANPort" or "is_endpoint" in node["collider"] and not node["collider"].get_parent().is_port_connected:
+			# One of the weirdest bugs ever, somehow I can't use node["collider"] is WanPort here because it then
+			# says that WanPort can't find it's extend, PortNode. But only if I compare it here.
+			# Maybe it's fixed in 4.3.
+			if node["collider"].name == "WANPort" or node["collider"] is PortNode and not node["collider"].get_parent().is_port_connected:
 				if node["collider"].name != "WANPort":
 					node["collider"].connected_cable = cable
 					node["collider"].get_parent().set_is_port_connected(true)

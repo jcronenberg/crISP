@@ -1,9 +1,9 @@
 [gd_scene load_steps=8 format=3 uid="uid://dkd7nmxly4jfr"]
 
-[ext_resource type="Script" path="res://src/endpoints/house.gd" id="1_fy65x"]
-[ext_resource type="Texture2D" uid="uid://c8y4is7v17o83" path="res://assets/house.png" id="2_fg0q7"]
-[ext_resource type="Script" path="res://src/endpoints/house_port.gd" id="3_a4vqq"]
-[ext_resource type="Texture2D" uid="uid://gxgi3r43dh4q" path="res://assets/black_circle.png" id="4_uv1cu"]
+[ext_resource type="Script" path="res://src/endpoints/house_node.gd" id="1_i8qi5"]
+[ext_resource type="Texture2D" uid="uid://c8y4is7v17o83" path="res://assets/house.png" id="2_7pdxc"]
+[ext_resource type="Script" path="res://src/endpoints/house_port.gd" id="3_jxbag"]
+[ext_resource type="Texture2D" uid="uid://gxgi3r43dh4q" path="res://assets/black_circle.png" id="4_giabd"]
 
 [sub_resource type="Shader" id="Shader_o8l8m"]
 code = "shader_type canvas_item;
@@ -25,21 +25,21 @@ radius = 5.0
 
 [node name="House" type="Node2D"]
 material = SubResource("ShaderMaterial_xai6s")
-script = ExtResource("1_fy65x")
+script = ExtResource("1_i8qi5")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 use_parent_material = true
 position = Vector2(0, -5)
 scale = Vector2(0.2, 0.2)
-texture = ExtResource("2_fg0q7")
+texture = ExtResource("2_7pdxc")
 
 [node name="HousePort" type="Area2D" parent="."]
-script = ExtResource("3_a4vqq")
+script = ExtResource("3_jxbag")
 
 [node name="PortSprite" type="Sprite2D" parent="HousePort"]
 use_parent_material = true
 scale = Vector2(0.02, 0.02)
-texture = ExtResource("4_uv1cu")
+texture = ExtResource("4_giabd")
 
 [node name="PortCollision" type="CollisionShape2D" parent="HousePort"]
 shape = SubResource("CircleShape2D_34dc3")

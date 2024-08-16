@@ -1,4 +1,5 @@
-extends Node2D
+class_name HouseNode
+extends EndpointNode
 
 var is_port_connected := false
 var placed := false
