@@ -1,5 +1,5 @@
+class_name NetworkSim
 extends Node
-
 ## TODO
 ## Switches don't get moved in path_calculator when they get moved in 2d space
 ##
@@ -9,7 +9,6 @@ extends Node
 ## allocated bandwidth. However I don't think this is a priority as the plan currently is to start a fail
 ## countdown when a house isn't connected anyway, so this enhancement would only really help in identifying
 ## issues in the network a bit better.
-class_name Simulation
 
 enum CABLE_TYPES {
 	COPPER,

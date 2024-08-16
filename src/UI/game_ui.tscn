@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://dfqf20b1gvbx6"]
 
-[ext_resource type="Script" path="res://scripts/CableTypesButtons.gd" id="1_y55m6"]
-[ext_resource type="Script" path="res://scripts/NewNodesButtons.gd" id="2_eu3bg"]
-[ext_resource type="Script" path="res://scripts/CursorModeButtons.gd" id="3_2mpmd"]
+[ext_resource type="Script" path="res://src/UI/cable_types_buttons.gd" id="1_y55m6"]
+[ext_resource type="Script" path="res://src/UI/new_nodes_buttons.gd" id="2_eu3bg"]
+[ext_resource type="Script" path="res://src/UI/cursor_mode_buttons.gd" id="3_2mpmd"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_2kd3i"]
 resource_name = "CableTypes"

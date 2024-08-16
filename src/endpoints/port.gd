@@ -1,8 +1,7 @@
+class_name Port
 extends Area2D
 
-class_name Port
-
-var cable_creator_scene = preload("res://scenes/cable_creator.tscn")
+var cable_creator_scene = preload("res://src/cables/cable_creator.tscn")
 const is_endpoint := true
 var connected_cable = null
 

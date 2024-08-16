@@ -1,6 +1,6 @@
 extends Node2D
 
-var cable_scene = preload("res://scenes/cable.tscn")
+var cable_scene = preload("res://src/cables/cable.tscn")
 var cable = null
 var cur_point := 0
 

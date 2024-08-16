@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://c75ksq31jylr"]
 
 [ext_resource type="Texture2D" uid="uid://gxgi3r43dh4q" path="res://assets/black_circle.png" id="1_a30t3"]
-[ext_resource type="Script" path="res://scripts/wan_port.gd" id="1_qem1d"]
+[ext_resource type="Script" path="res://src/endpoints/wan_port.gd" id="1_qem1d"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3fbuq"]
 radius = 5.0

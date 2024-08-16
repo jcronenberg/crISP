@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bq552v5l6r06i"]
 
-[ext_resource type="Script" path="res://scripts/Cable.gd" id="1_sr31f"]
-[ext_resource type="Texture2D" uid="uid://cgvodk1fn54p2" path="res://assets/dashed-line.png" id="1_w6pg7"]
+[ext_resource type="Texture2D" uid="uid://cgvodk1fn54p2" path="res://assets/dashed-line.png" id="1_rb3gk"]
+[ext_resource type="Script" path="res://src/cables/cable.gd" id="2_mf6c3"]
 
 [node name="Cable" type="Line2D"]
 texture_filter = 5
@@ -9,9 +9,9 @@ texture_repeat = 2
 points = PackedVector2Array(0, 0)
 width = 5.0
 default_color = Color(0, 1, 0, 1)
-texture = ExtResource("1_w6pg7")
+texture = ExtResource("1_rb3gk")
 texture_mode = 1
 joint_mode = 2
 round_precision = 32
 antialiased = true
-script = ExtResource("1_sr31f")
+script = ExtResource("2_mf6c3")

@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://dl7lp14w810qj"]
+
+[ext_resource type="Script" path="res://src/scenes/main/main.gd" id="1_y78sm"]
+[ext_resource type="Script" path="res://src/scenes/main/camera.gd" id="2_fde36"]
+[ext_resource type="Texture2D" uid="uid://xlfunc5i22gq" path="res://assets/mne_bg.png" id="3_24q1b"]
+[ext_resource type="PackedScene" uid="uid://dfqf20b1gvbx6" path="res://src/UI/game_ui.tscn" id="4_r4fbr"]
+[ext_resource type="PackedScene" uid="uid://c75ksq31jylr" path="res://src/endpoints/wan_port.tscn" id="5_440vv"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_y78sm")
+
+[node name="Camera" type="Camera2D" parent="."]
+script = ExtResource("2_fde36")
+
+[node name="Background" type="Sprite2D" parent="Camera"]
+texture_filter = 2
+texture_repeat = 2
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("3_24q1b")
+region_enabled = true
+region_rect = Rect2(0, 0, 20000, 20000)
+
+[node name="Cables" type="Node2D" parent="."]
+
+[node name="Switches" type="Node2D" parent="."]
+
+[node name="Houses" type="Node2D" parent="."]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="GameUI" parent="CanvasLayer" instance=ExtResource("4_r4fbr")]
+size_flags_horizontal = 0
+mouse_filter = 1
+
+[node name="WANPort" parent="." instance=ExtResource("5_440vv")]
