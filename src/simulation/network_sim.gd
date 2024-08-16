@@ -1,223 +1,145 @@
 class_name NetworkSim
 extends Node
 ## TODO
-## Switches don't get moved in path_calculator when they get moved in 2d space
-##
 ## When a house couldn't get a connection it still up to the point where the allocation failed allocated
 ## bandwidth until that cable. So e.g. if path is [5, 2, 0] and 5 is successful but 2 not then 5 would still
 ## get allocated 50. Not a trivial change because theoretically we would need to go back and change already
 ## allocated bandwidth. However I don't think this is a priority as the plan currently is to start a fail
 ## countdown when a house isn't connected anyway, so this enhancement would only really help in identifying
 ## issues in the network a bit better.
+## (does this really ever matter? I think actually not because it still goes through all the houses one by one
+## and tries to connect for every house, so they actually shouldn't cannibalize because if there is a path
+## it will get allocated, so it should always connect as many houses as possible, because we go through the
+## houses one by one. It should only matter if we somehow go through houses in parallel, but I don't think
+## this will ever be necessary and I think we would run into many other race conditions anyway then)
+##
+## Maybe don't make this a node and instead control the simulation steps from the outside.
 
-enum CABLE_TYPES {
-	COPPER,
-	FIBER,
-	}
-enum MAX_CABLE_BANDWIDTH {
-	COPPER = 250,
-	FIBER = 1000,
-	}
-
-var SWITCH = {
-	"type": "switch",
-	"connected_nodes": [],
-	"cables": [],
-	}
-var HOUSE = {
-	"type": "house",
-	"cables": [],
-	"cur_bandwidth": 0,
-	"max_bandwidth": 0,
-	"allocated_bandwidth": 0,
-	}
-var CABLE = {
-	"type": "cable",
-	"cable_type": CABLE_TYPES.COPPER,
-	"cur_bandwidth": 0,
-	"con1": -1,
-	"con2": -1,
-	}
-
-# Note the normal and nodes array should be kept in sync to allow a 1 to 1 mapping
-var endpoints: Array = []
-var endpoint_nodes: Array = []
-var cables: Array = []
-var cable_nodes: Array = []
-var houses: Array = []
-
+var endpoints: Array[Endpoint] = []
+var cables: Array[Cable] = []
+var houses: Array[House] = []
+var id_counter: int = 1 # Start at 1 because 0 is WAN
 var path_calculator: NetworkAStar = NetworkAStar.new()
 
 
-func add_switch(switch_node, pos: Vector2):
-	var new_switch = SWITCH.duplicate(true)
-	path_calculator.add_point(endpoints.size(), pos)
-	endpoints.push_back(new_switch)
-	endpoint_nodes.push_back(switch_node)
+func _physics_process(_delta: float):
+	reset_bandwidth_state()
+	allocate_houses()
 
 
-func add_house(house_node, pos: Vector2):
-	var new_house = HOUSE.duplicate(true)
-	new_house["cur_bandwidth"] = 100
-	new_house["max_bandwidth"] = 100
-	path_calculator.add_point(endpoints.size(), pos)
-	endpoints.push_back(new_house)
-	endpoint_nodes.push_back(house_node)
-	houses.push_back(new_house)
+func _ready():
+	set_name("Simulation")
+
+	# Add WANPort as first endpoint
+	var wan: Endpoint = WanEndpoint.new()
+	wan.node_ref = get_node("/root/Main/WANPort")
+	endpoints.append(wan)
+	path_calculator.add_point(0, Vector2(0, 0))
 
 
-func add_cable(cable_node):
-	var new_cable = CABLE.duplicate(true)
-	match cable_node.cable_type:
+func add_endpoint(endpoint: EndpointNode) -> void:
+	var new_endpoint: Endpoint
+	if endpoint is SwitchNode:
+		new_endpoint = Switch.new()
+	elif endpoint is HouseNode:
+		new_endpoint = House.new()
+		houses.append(new_endpoint)
+
+	new_endpoint.sim_id = id_counter
+	new_endpoint.node_ref = endpoint
+	id_counter += 1
+	endpoints.append(new_endpoint)
+	# Position shouldn't matter because of our own heuristics in NetworkAStar
+	path_calculator.add_point(new_endpoint.sim_id, Vector2(1, 1))
+
+
+func add_cable(cable: CableNode) -> void:
+	var new_cable: Cable
+	match cable.cable_type:
 		"copper":
-			new_cable["cable_type"] = CABLE_TYPES.COPPER
+			new_cable = CopperCable.new()
 		"fiber":
-			new_cable["cable_type"] = CABLE_TYPES.FIBER
+			new_cable = FiberCable.new()
 
-	cables.push_back(new_cable)
-	cable_nodes.push_back(cable_node)
-
-	new_cable["con1"] = endpoint_nodes.find(cable_node.port1.get_real_parent())
-	# if con2 is WANPort, Note WANPort is always 0 and WANPort never is con1 since it is always the end of a cable
-	if endpoint_nodes.find(cable_node.port2) != -1:
-		new_cable["con2"] = 0
-	else:
-		new_cable["con2"] = endpoint_nodes.find(cable_node.port2.get_real_parent())
-
-	endpoints[new_cable["con1"]]["cables"].push_back(new_cable)
-	endpoints[new_cable["con2"]]["cables"].push_back(new_cable)
+	new_cable.node_ref = cable
+	new_cable.endpoint1_id = _find_endpoint_id_by_node(cable.port1.get_real_parent())
+	new_cable.endpoint2_id = _find_endpoint_id_by_node(cable.port2.get_real_parent())
+	endpoints[new_cable.endpoint1_id].add_cable(new_cable)
+	endpoints[new_cable.endpoint2_id].add_cable(new_cable)
+	cables.append(new_cable)
 
 
-# Pretty much a wrapper around path_calculator.connect_points()
-# but more specialised to automatically connect cable con1 and con2
-func connect_cable(cable):
-	path_calculator.connect_points(cable["con1"], cable["con2"])
+func connect_cable(cable: Cable) -> void:
+	path_calculator.connect_points(cable.endpoint1_id, cable.endpoint2_id)
 
 
-# Returns if allocation was successful
-func allocate_house_bandwidth(house) -> bool:
-	while house["allocated_bandwidth"] < house["cur_bandwidth"]:
-		var path := path_calculator.get_id_path(endpoints.find(house), 0)
+# TODO how to not allocate for any cable if max can't be allocated
+func allocate_house_bandwidth(house: House) -> bool:
+	while house.connected_bandwidth < house.bandwidth:
+		var path: PackedInt64Array = path_calculator.get_id_path(house.sim_id, 0)
 		if path.size() == 0:
 			return false
-		var cable_path = get_cables_for_path(path)
-		if not cable_path:
+		var cable_path: Array[Cable] = get_cables_for_path(path)
+		if cable_path.size() == 0:
 			continue
 
-		for cable in cable_path:
-			cable["cur_bandwidth"] += 50
-			cable_nodes[cables.find(cable)].update_cur_bandwidth(cable["cur_bandwidth"])
+		var possible_bandwidth: int = _get_possible_bandwidth_for_path(cable_path)
+		var to_allocate_bandwidth: int = house.bandwidth - house.connected_bandwidth
+		if to_allocate_bandwidth > possible_bandwidth:
+			to_allocate_bandwidth = possible_bandwidth
 
-		house["allocated_bandwidth"] += 50
+		for cable in cable_path:
+			cable.add_bandwidth(to_allocate_bandwidth)
+
+		house.connected_bandwidth += to_allocate_bandwidth
 
 	return true
 
 
-func get_cables_for_path(path: Array):
-	var cables_array := []
+func get_cables_for_path(path: PackedInt64Array) -> Array[Cable]:
+	var cables_array: Array[Cable] = []
 	for i in path.size() - 1:
-		var found_free_cable := false
-		for cable in endpoints[path[i]]["cables"]:
-			for con in ["con1", "con2"]:
-				if cable[con] == path[i + 1] and not found_free_cable:
-					var max_bandwidth
-					match cable["cable_type"]:
-						CABLE_TYPES.COPPER:
-							max_bandwidth = MAX_CABLE_BANDWIDTH.COPPER
-						CABLE_TYPES.FIBER:
-							max_bandwidth = MAX_CABLE_BANDWIDTH.FIBER
-					if cable["cur_bandwidth"] >= max_bandwidth:
-						continue
-
-					cables_array.push_back(cable)
-					found_free_cable = true
+		var found_free_cable: bool = false
+		for cable in endpoints[path[i]].connected_cables:
+			# if not found_free_cable and cable.endpoint1_id == path[i + 1] or cable.endpoint2_id == path[i + 1]:
+			if cable.endpoint1_id == path[i + 1] or cable.endpoint2_id == path[i + 1]:
+				if cable.get_free_bandwidth() <= 0:
+					continue
+				cables_array.append(cable)
+				found_free_cable = true
+				break
 
 		if not found_free_cable:
 			path_calculator.disconnect_points(path[i], path[i + 1])
-			return null
+			return []
 
 	return cables_array
 
 
-# TODO probably better to return the cable that has free bandwidth or null if none are available
-# that way we can store the cable and only allocate the bandwidth when the right cable is selected
-# although now that I'm thinking about it, the a star algo should only show valid routes
-# maybe the problem is that the astar update happens too late??
-# maybe there is a way here to continue checking the cables and if it is the last cable and
-# the bandwidth it allocated to disconnect the points, smth like that.
-# returns left over bandwidth
-# func allocate_bandwidth(from_endpoint_idx: int, to_endpoint_idx: int) -> bool:
-# 	var allocated := false
-# 	for cable in endpoints[from_endpoint_idx]["cables"]:
-# 		for con in ["con1", "con2"]:
-# 			if cable[con] == to_endpoint_idx:
-# 				var max_bandwidth
-# 				match cable["cable_type"]:
-# 					CABLE_TYPES.COPPER:
-# 						max_bandwidth = MAX_CABLE_BANDWIDTH.COPPER
-# 					CABLE_TYPES.FIBER:
-# 						max_bandwidth = MAX_CABLE_BANDWIDTH.FIBER
-# 				if cable["cur_bandwidth"] == max_bandwidth:
-# 					continue
-
-# 				cable["cur_bandwidth"] += 50
-# 				cable_nodes[cables.find(cable)].update_cur_bandwidth(cable["cur_bandwidth"])
-# 				allocated = true
-
-# 	if not allocated:
-# 		path_calculator.disconnect_points(from_endpoint_idx, to_endpoint_idx)
-
-# 	return allocated
-
-
-# Currently unused but may be a better approach if performance starts to be a problem
-func free_bandwidth(from_endpoint_idx: int, to_endpoint_idx: int, bandwidth: int):
-	for cable in endpoints[from_endpoint_idx]["cables"]:
-		for con in ["con1", "con2"]:
-			if cable[con] == to_endpoint_idx:
-				var new_bandwidth = cable[con]["cur_bandwidth"]
-				new_bandwidth -= bandwidth
-				if new_bandwidth < 0:
-					bandwidth = abs(new_bandwidth)
-					cable[con]["cur_bandwidth"] = 0
-				else:
-					cable[con]["cur_bandwidth"] = new_bandwidth
-					return
-
-
-func delete_cable(cable_node):
-	var cable_node_idx = cable_nodes.find(cable_node)
-	if cable_node_idx == -1:
-		push_error("Couldn't find cable (", cable_node, ") to delete in simulation")
-		return
-	var cable_sim = cables[cable_node_idx]
-	for endpoint in endpoints:
-		for cable in endpoint["cables"]:
-			if cable == cable_sim:
-				endpoint["cables"].erase(cable)
-
-	cables.remove_at(cable_node_idx)
-	cable_nodes.remove_at(cable_node_idx)
-
-
-func reset_bandwidth_state():
-	for cable_node in cable_nodes:
-		cable_node.update_cur_bandwidth(0)
+func delete_cable(cable_node: CableNode) -> void:
 	for cable in cables:
-		cable["cur_bandwidth"] = 0
+		if cable.node_ref == cable_node:
+			endpoints[cable.endpoint1_id].remove_cable(cable)
+			endpoints[cable.endpoint2_id].remove_cable(cable)
+			cables.erase(cable)
+
+
+func reset_bandwidth_state() -> void:
+	for cable in cables:
+		cable.cur_bandwidth = 0
 		connect_cable(cable)
 	for house in houses:
-		house["allocated_bandwidth"] = 0
+		house.connected_bandwidth = 0
 
 
-func allocate_houses():
-	var allocation_successful := true
+func allocate_houses() -> void:
+	var allocation_successful: bool = true
 	for house in houses:
 		if not allocate_house_bandwidth(house):
-			endpoint_nodes[endpoints.find(house)].set_allocated_state(false)
+			house.node_ref.set_allocated_state(false)
 			allocation_successful = false
 		else:
-			endpoint_nodes[endpoints.find(house)].set_allocated_state(true)
+			house.node_ref.set_allocated_state(true)
 
 	if allocation_successful:
 		get_node("/root/UiController").hide_warning()
@@ -225,28 +147,24 @@ func allocate_houses():
 		get_node("/root/UiController").display_warning("Warning")
 
 
-var delta_sum := 0.0
-func _physics_process(delta):
-	delta_sum += delta
-	if delta_sum >= 1.0:
-		delta_sum = 0.0
-		reset_bandwidth_state()
-		allocate_houses()
-		# print("endpoints: ", endpoints)
-		# print("cables: ", cables)
-		# for i in endpoints.size():
-		# 	print("shortest path for endpoint: ", i)
-		# 	print(path_calculator.get_id_path(i, 0))
-		# print()
+func _get_possible_bandwidth_for_path(path: Array[Cable]) -> int:
+	# Double get_free_bandwidth for first node, but everything else is annoying
+	# and I'm not sure what is actually more efficient, but may be more optimizable
+	var possible_bandwidth: int = path[0].get_free_bandwidth()
+	for cable in path:
+		var free_bandwidth: int = cable.get_free_bandwidth()
+
+		if possible_bandwidth > free_bandwidth:
+			possible_bandwidth = free_bandwidth
+	return possible_bandwidth
 
 
-func _ready():
-	set_name("Simulation")
+func _find_endpoint_id_by_node(node: Node2D) -> int:
+	for endpoint in endpoints:
+		if endpoint.node_ref == node:
+			return endpoint.sim_id
 
-	# Add WANPort as first endpoint
-	endpoint_nodes.push_back(get_node("/root/Main/WANPort"))
-	endpoints.push_back({"type": "wan_port", "connected_nodes": [], "cables": [], "path_pos": Vector2(0, 0)})
-	path_calculator.add_point(0, Vector2(0, 0))
+	return -1
 
 
 ## A simple fewest hops pathfinder
@@ -262,3 +180,80 @@ class NetworkAStar extends AStar2D:
 
 	func _estimate_cost(_from_id: int, _to_id: int) -> float:
 		return 0
+
+
+class Endpoint:
+	var node_ref: Node2D
+	var connected_cables: Array[Cable] = []
+	var sim_id: int = -1
+
+
+	func add_cable(cable: Cable) -> void:
+		connected_cables.append(cable)
+
+
+	func remove_cable(cable: Cable) -> void:
+		connected_cables.erase(cable)
+
+
+class WanEndpoint extends Endpoint:
+
+	func _init():
+		sim_id = 0
+
+
+	func add_cable(cable: Cable) -> void:
+		connected_cables.append(cable)
+
+
+class Switch extends Endpoint:
+	pass
+
+
+class House extends Endpoint:
+	var bandwidth: int = 100 # hardcoded for now
+	var connected_bandwidth: int = 0
+
+
+class Cable:
+	var node_ref: CableNode
+	var endpoint1_id: int
+	var endpoint2_id: int
+	var max_bandwidth: int:
+		set = set_max_bandwidth
+	var cur_bandwidth: int:
+		set = set_cur_bandwidth
+
+
+	func set_max_bandwidth(value: int) -> void:
+		max_bandwidth = value
+
+
+	func set_cur_bandwidth(value: int) -> void:
+		cur_bandwidth = value
+		node_ref.update_cur_bandwidth(cur_bandwidth)
+
+
+	## Returns false if [param value] can't be allocated, nothing will be added in that scenario.
+	func add_bandwidth(value: int) -> bool:
+		if cur_bandwidth + value > max_bandwidth:
+			return false
+
+		cur_bandwidth += value
+		return true
+
+
+	func get_free_bandwidth() -> int:
+		return max_bandwidth - cur_bandwidth
+
+
+class CopperCable extends Cable:
+
+	func _init():
+		max_bandwidth = 250
+
+
+class FiberCable extends Cable:
+
+	func _init():
+		max_bandwidth = 1000

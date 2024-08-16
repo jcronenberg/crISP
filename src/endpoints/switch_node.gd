@@ -17,7 +17,7 @@ func _process(_delta):
 func _input(event):
 	if event.is_action_pressed("LClick"):
 		placed = true
-		get_node("/root/Main/Simulation").add_switch(self, global_position)
+		get_node("/root/Main/Simulation").add_endpoint(self)
 		set_process(false)
 		set_process_input(false)
 		get_viewport().set_input_as_handled()
