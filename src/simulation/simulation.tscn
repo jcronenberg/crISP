@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://g7prnvkrx7xb"]
+
+[ext_resource type="Script" path="res://src/simulation/simulation.gd" id="1_f7ilh"]
+[ext_resource type="Script" path="res://src/simulation/camera.gd" id="2_bxsqd"]
+[ext_resource type="Texture2D" uid="uid://xlfunc5i22gq" path="res://assets/mne_bg.png" id="3_pybq3"]
+[ext_resource type="PackedScene" uid="uid://c75ksq31jylr" path="res://src/endpoints/wan_port.tscn" id="5_tgaow"]
+
+[node name="Simulation" type="Node2D"]
+script = ExtResource("1_f7ilh")
+
+[node name="Camera" type="Camera2D" parent="."]
+script = ExtResource("2_bxsqd")
+
+[node name="Background" type="Sprite2D" parent="Camera"]
+texture_filter = 2
+texture_repeat = 2
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("3_pybq3")
+region_enabled = true
+region_rect = Rect2(0, 0, 20000, 20000)
+
+[node name="Cables" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Switches" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Houses" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="WANPort" parent="." instance=ExtResource("5_tgaow")]
+unique_name_in_owner = true

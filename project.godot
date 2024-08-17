@@ -11,13 +11,13 @@ config_version=5
 [application]
 
 config/name="Mini Network Engineer"
-run/main_scene="res://src/scenes/main/main.tscn"
+run/main_scene="res://src/scenes/main/game.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
-UiController="*res://src/UI/ui_controller.gd"
+Global="*res://src/globals/global.gd"
 
 [display]
 

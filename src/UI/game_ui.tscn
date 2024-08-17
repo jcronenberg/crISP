@@ -1,8 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://dfqf20b1gvbx6"]
+[gd_scene load_steps=3 format=3 uid="uid://dfqf20b1gvbx6"]
 
-[ext_resource type="Script" path="res://src/UI/cable_types_buttons.gd" id="1_y55m6"]
-[ext_resource type="Script" path="res://src/UI/new_nodes_buttons.gd" id="2_eu3bg"]
-[ext_resource type="Script" path="res://src/UI/cursor_mode_buttons.gd" id="3_2mpmd"]
+[ext_resource type="Script" path="res://src/UI/game_ui.gd" id="1_hlsmw"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_2kd3i"]
 resource_name = "CableTypes"
@@ -14,6 +12,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_hlsmw")
 
 [node name="CableTypesButtons" type="HBoxContainer" parent="."]
 layout_mode = 1
@@ -23,7 +22,6 @@ anchor_bottom = 1.0
 offset_top = -40.0
 offset_right = 40.0
 grow_vertical = 0
-script = ExtResource("1_y55m6")
 
 [node name="CableCopperButton" type="Button" parent="CableTypesButtons"]
 layout_mode = 2
@@ -49,7 +47,6 @@ offset_left = -40.0
 offset_top = -40.0
 grow_horizontal = 0
 grow_vertical = 0
-script = ExtResource("2_eu3bg")
 
 [node name="NewSwitchButton" type="Button" parent="NewNodesButtons"]
 layout_mode = 2
@@ -67,7 +64,6 @@ anchor_right = 1.0
 offset_left = -198.0
 offset_bottom = 40.0
 grow_horizontal = 0
-script = ExtResource("3_2mpmd")
 
 [node name="DeleteCableButton" type="Button" parent="CursorModeButtons"]
 layout_mode = 2
@@ -82,6 +78,7 @@ button_group = SubResource("ButtonGroup_2kd3i")
 text = "Move Switch"
 
 [node name="WarningLabel" type="Label" parent="."]
+unique_name_in_owner = true
 visible = false
 layout_mode = 1
 anchors_preset = 5
@@ -94,9 +91,9 @@ grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 text = "Warning"
 
-[connection signal="pressed" from="CableTypesButtons/CableCopperButton" to="CableTypesButtons" method="_on_cable_copper_button_pressed"]
-[connection signal="pressed" from="CableTypesButtons/CableFiberButton" to="CableTypesButtons" method="_on_cable_fiber_button_pressed"]
-[connection signal="pressed" from="NewNodesButtons/NewSwitchButton" to="NewNodesButtons" method="_on_new_switch_button_pressed"]
-[connection signal="pressed" from="NewNodesButtons/NewHouseButton" to="NewNodesButtons" method="_on_new_house_button_pressed"]
-[connection signal="pressed" from="CursorModeButtons/DeleteCableButton" to="CursorModeButtons" method="_on_delete_cable_button_pressed"]
-[connection signal="pressed" from="CursorModeButtons/MoveSwitchButton" to="CursorModeButtons" method="_on_move_switch_button_pressed"]
+[connection signal="pressed" from="CableTypesButtons/CableCopperButton" to="." method="_on_cable_copper_button_pressed"]
+[connection signal="pressed" from="CableTypesButtons/CableFiberButton" to="." method="_on_cable_fiber_button_pressed"]
+[connection signal="pressed" from="NewNodesButtons/NewSwitchButton" to="." method="_on_new_switch_button_pressed"]
+[connection signal="pressed" from="NewNodesButtons/NewHouseButton" to="." method="_on_new_house_button_pressed"]
+[connection signal="pressed" from="CursorModeButtons/DeleteCableButton" to="." method="_on_delete_cable_button_pressed"]
+[connection signal="pressed" from="CursorModeButtons/MoveSwitchButton" to="." method="_on_move_switch_button_pressed"]

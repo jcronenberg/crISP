@@ -1,5 +1,4 @@
 class_name NetworkSim
-extends Node
 ## TODO
 ## When a house couldn't get a connection it still up to the point where the allocation failed allocated
 ## bandwidth until that cable. So e.g. if path is [5, 2, 0] and 5 is successful but 2 not then 5 would still
@@ -15,24 +14,27 @@ extends Node
 ##
 ## Maybe don't make this a node and instead control the simulation steps from the outside.
 
+signal houses_allocated(allocated: bool)
+
 var endpoints: Array[Endpoint] = []
 var cables: Array[Cable] = []
 var houses: Array[House] = []
+var houses_allocated_state: bool = false # Used to detect changes and then emit houses_allocated
 var id_counter: int = 1 # Start at 1 because 0 is WAN
 var path_calculator: NetworkAStar = NetworkAStar.new()
 
 
-func _physics_process(_delta: float):
+## Runs a single step of the simulation
+func sim_step() -> void:
 	reset_bandwidth_state()
 	allocate_houses()
 
 
-func _ready():
-	set_name("Simulation")
-
+## Add the wan port
+func add_wan(wan_node: WanPort) -> void:
 	# Add WANPort as first endpoint
 	var wan: Endpoint = WanEndpoint.new()
-	wan.node_ref = get_node("/root/Main/WANPort")
+	wan.node_ref = wan_node
 	endpoints.append(wan)
 	path_calculator.add_point(0, Vector2(0, 0))
 
@@ -56,10 +58,13 @@ func add_endpoint(endpoint: EndpointNode) -> void:
 func add_cable(cable: CableNode) -> void:
 	var new_cable: Cable
 	match cable.cable_type:
-		"copper":
+		Global.CableTypes.COPPER:
 			new_cable = CopperCable.new()
-		"fiber":
+		Global.CableTypes.FIBER:
 			new_cable = FiberCable.new()
+		_:
+			push_error("Invalid cable type")
+			return
 
 	new_cable.node_ref = cable
 	new_cable.endpoint1_id = _find_endpoint_id_by_node(cable.port1.get_real_parent())
@@ -141,10 +146,12 @@ func allocate_houses() -> void:
 		else:
 			house.node_ref.set_allocated_state(true)
 
-	if allocation_successful:
-		get_node("/root/UiController").hide_warning()
-	else:
-		get_node("/root/UiController").display_warning("Warning")
+	if allocation_successful and not houses_allocated_state:
+		houses_allocated_state = true
+		emit_signal("houses_allocated", true)
+	elif not allocation_successful and houses_allocated_state:
+		houses_allocated_state = false
+		emit_signal("houses_allocated", false)
 
 
 func _get_possible_bandwidth_for_path(path: Array[Cable]) -> int:

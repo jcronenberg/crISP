@@ -1,20 +1,9 @@
+class_name CableCreator
 extends Node2D
 
 const cable_scene = preload("res://src/cables/cable_node.tscn")
 var cable: CableNode = null
 var cur_point := 0
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	var cable_root = get_node("/root/Main/Cables")
-	if not cable:
-		cable = cable_scene.instantiate()
-		cable_root.add_child(cable)
-		cable.global_position = self.global_position
-		cable.add_point(Vector2(0, 0))
-		cur_point = 1
-	else:
-		cur_point = cable.get_point_count() - 1
 
 func _input(event):
 	if event.is_action_pressed("LClick"):
@@ -35,7 +24,7 @@ func _input(event):
 				cable.port2 = node["collider"]
 				cable.set_point_position(cur_point, node["collider"].global_position - cable.global_position)
 				# Cable setup is finished, add to simulation and free creator
-				get_node("/root/Main/Simulation").add_cable(cable)
+				Global.get_current_simulation().add_cable_to_sim(cable)
 				queue_free()
 				return
 			# Invalid because point is a endpoint but not free
@@ -60,6 +49,14 @@ func _process(_delta):
 	cable.set_point_position(cur_point, (cursor_pos - cable.global_position).snapped(Vector2i(20, 20)))
 
 
-func init(caller_port):
+func init(caller_port: PortNode) -> void:
+	if not cable:
+		cable = cable_scene.instantiate()
+		Global.get_current_simulation().add_cable(cable)
+		cable.global_position = caller_port.global_position
+		cable.add_point(Vector2(0, 0))
+		cur_point = 1
+	else:
+		cur_point = cable.get_point_count() - 1
 	cable.port1 = caller_port
 	caller_port.connected_cable = cable

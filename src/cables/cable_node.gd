@@ -3,14 +3,14 @@ extends Line2D
 
 var port1: PortNode = null
 var port2: PortNode = null
-var cable_type: String = "fiber"
+var cable_type: Global.CableTypes
 var max_bandwidth: int = 1000
 var cur_bandwidth: int = 0
 @onready var cable_gradient = load("res://resources/cable_gradient.tres")
 
 func _ready():
-	cable_type = get_node("/root/UiController").selected_cable_type
-	if cable_type == "copper":
+	cable_type = Global.selected_cable_type
+	if cable_type == Global.CableTypes.COPPER:
 		texture = null
 		max_bandwidth = 250
 
