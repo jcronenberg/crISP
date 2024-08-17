@@ -28,11 +28,8 @@ func _input(event):
 		var nodes = space_state.intersect_point(query)
 		#print(nodes) # debug
 		for node in nodes:
-			# One of the weirdest bugs ever, somehow I can't use node["collider"] is WanPort here because it then
-			# says that WanPort can't find it's extend, PortNode. But only if I compare it here.
-			# Maybe it's fixed in 4.3.
-			if node["collider"].name == "WANPort" or node["collider"] is PortNode and not node["collider"].get_parent().is_port_connected:
-				if node["collider"].name != "WANPort":
+			if node["collider"] is WanPort or node["collider"] is PortNode and not node["collider"].get_parent().is_port_connected:
+				if node["collider"] is not WanPort:
 					node["collider"].connected_cable = cable
 					node["collider"].get_parent().set_is_port_connected(true)
 				cable.port2 = node["collider"]
