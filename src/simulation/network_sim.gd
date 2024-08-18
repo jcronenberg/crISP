@@ -19,7 +19,7 @@ signal houses_allocated(allocated: bool)
 var endpoints: Array[Endpoint] = []
 var cables: Array[Cable] = []
 var houses: Array[House] = []
-var houses_allocated_state: bool = false # Used to detect changes and then emit houses_allocated
+var houses_allocated_state: bool = true # Used to detect changes and then emit houses_allocated
 var id_counter: int = 1 # Start at 1 because 0 is WAN
 var path_calculator: NetworkAStar = NetworkAStar.new()
 
@@ -141,16 +141,18 @@ func allocate_houses() -> void:
 	var allocation_successful: bool = true
 	for house in houses:
 		if not allocate_house_bandwidth(house):
-			house.node_ref.set_allocated_state(false)
+			house.set_allocated(false)
 			allocation_successful = false
 		else:
-			house.node_ref.set_allocated_state(true)
+			house.set_allocated(true)
 
 	if allocation_successful and not houses_allocated_state:
 		houses_allocated_state = true
+		# Call to main_thread
 		emit_signal("houses_allocated", true)
 	elif not allocation_successful and houses_allocated_state:
 		houses_allocated_state = false
+		# Call to main_thread
 		emit_signal("houses_allocated", false)
 
 
@@ -220,6 +222,18 @@ class Switch extends Endpoint:
 class House extends Endpoint:
 	var bandwidth: int = 100 # hardcoded for now
 	var connected_bandwidth: int = 0
+	var _allocated: bool:
+		set = set_allocated
+
+
+	# Return true if main_thread was called
+	func set_allocated(value: bool) -> void:
+		if _allocated == value:
+			return
+
+		_allocated = value
+		# Call to main_thread
+		node_ref.set_allocated_state(value)
 
 
 class Cable:
@@ -237,7 +251,10 @@ class Cable:
 
 
 	func set_cur_bandwidth(value: int) -> void:
+		if cur_bandwidth == value:
+			return
 		cur_bandwidth = value
+		# Call to main_thread
 		node_ref.update_cur_bandwidth(cur_bandwidth)
 
 
