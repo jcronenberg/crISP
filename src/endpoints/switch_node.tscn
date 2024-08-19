@@ -1,11 +1,62 @@
-[gd_scene load_steps=5 format=3 uid="uid://wn2ch8bgv060"]
+[gd_scene load_steps=16 format=3 uid="uid://wn2ch8bgv060"]
 
 [ext_resource type="Script" path="res://src/endpoints/switch_node.gd" id="1_14c4t"]
 [ext_resource type="Script" path="res://src/endpoints/switch_body_area.gd" id="2_icf0f"]
 [ext_resource type="PackedScene" uid="uid://dul63201md3r7" path="res://src/endpoints/switch_port.tscn" id="5_pmew2"]
+[ext_resource type="Shader" path="res://src/shaders/color.gdshader" id="6_i6rcj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lj5gn"]
 size = Vector2(100, 40)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5otax"]
+resource_local_to_scene = true
+shader = ExtResource("6_i6rcj")
+shader_parameter/color = Color(0, 1, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wptdq"]
+resource_local_to_scene = true
+shader = ExtResource("6_i6rcj")
+shader_parameter/color = Color(0, 1, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1nb4m"]
+resource_local_to_scene = true
+shader = ExtResource("6_i6rcj")
+shader_parameter/color = Color(0, 1, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rt6e3"]
+resource_local_to_scene = true
+shader = ExtResource("6_i6rcj")
+shader_parameter/color = Color(0, 1, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_br43t"]
+resource_local_to_scene = true
+shader = ExtResource("6_i6rcj")
+shader_parameter/color = Color(0, 1, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_byk3q"]
+resource_local_to_scene = true
+shader = ExtResource("6_i6rcj")
+shader_parameter/color = Color(0, 1, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2oxjv"]
+resource_local_to_scene = true
+shader = ExtResource("6_i6rcj")
+shader_parameter/color = Color(0, 1, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_03ykg"]
+resource_local_to_scene = true
+shader = ExtResource("6_i6rcj")
+shader_parameter/color = Color(0, 1, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jp43m"]
+resource_local_to_scene = true
+shader = ExtResource("6_i6rcj")
+shader_parameter/color = Color(0, 1, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_s167i"]
+resource_local_to_scene = true
+shader = ExtResource("6_i6rcj")
+shader_parameter/color = Color(0, 1, 0, 1)
 
 [node name="Switch" type="Node2D"]
 script = ExtResource("1_14c4t")
@@ -21,31 +72,41 @@ polygon = PackedVector2Array(-50, -20, -50, 20, 50, 20, 50, -20)
 shape = SubResource("RectangleShape2D_lj5gn")
 
 [node name="Port1" parent="." instance=ExtResource("5_pmew2")]
-position = Vector2(-40, -20)
+material = SubResource("ShaderMaterial_5otax")
+position = Vector2(-40, -10)
 
 [node name="Port2" parent="." instance=ExtResource("5_pmew2")]
-position = Vector2(-20, -20)
+material = SubResource("ShaderMaterial_wptdq")
+position = Vector2(-20, -10)
 
 [node name="Port3" parent="." instance=ExtResource("5_pmew2")]
-position = Vector2(0, -20)
+material = SubResource("ShaderMaterial_1nb4m")
+position = Vector2(0, -10)
 
 [node name="Port4" parent="." instance=ExtResource("5_pmew2")]
-position = Vector2(20, -20)
+material = SubResource("ShaderMaterial_rt6e3")
+position = Vector2(20, -10)
 
 [node name="Port5" parent="." instance=ExtResource("5_pmew2")]
-position = Vector2(40, -20)
+material = SubResource("ShaderMaterial_br43t")
+position = Vector2(40, -10)
 
 [node name="Port6" parent="." instance=ExtResource("5_pmew2")]
-position = Vector2(-40, 20)
+material = SubResource("ShaderMaterial_byk3q")
+position = Vector2(-40, 10)
 
 [node name="Port7" parent="." instance=ExtResource("5_pmew2")]
-position = Vector2(-20, 20)
+material = SubResource("ShaderMaterial_2oxjv")
+position = Vector2(-20, 10)
 
 [node name="Port8" parent="." instance=ExtResource("5_pmew2")]
-position = Vector2(0, 20)
+material = SubResource("ShaderMaterial_03ykg")
+position = Vector2(0, 10)
 
 [node name="Port9" parent="." instance=ExtResource("5_pmew2")]
-position = Vector2(20, 20)
+material = SubResource("ShaderMaterial_jp43m")
+position = Vector2(20, 10)
 
 [node name="Port10" parent="." instance=ExtResource("5_pmew2")]
-position = Vector2(40, 20)
+material = SubResource("ShaderMaterial_s167i")
+position = Vector2(40, 10)
