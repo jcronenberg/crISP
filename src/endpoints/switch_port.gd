@@ -15,3 +15,9 @@ func move_connected_cable(position_diff: Vector2) -> void:
 	else:
 		point_id = connected_cable.get_point_count() - 1
 	connected_cable.set_point_position(point_id, connected_cable.get_point_position(point_id) - position_diff)
+
+
+func set_is_port_connected(value: bool) -> void:
+	is_port_connected = value
+	if not is_port_connected:
+		material.set_shader_parameter("color", Color(0, 1, 0))
