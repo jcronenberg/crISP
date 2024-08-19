@@ -16,4 +16,8 @@ func _ready():
 
 func update_cur_bandwidth(bandwidth: int):
 	cur_bandwidth = bandwidth
-	default_color = cable_gradient.sample(float(cur_bandwidth) / max_bandwidth)
+	var bandwidth_color: Color = cable_gradient.sample(float(cur_bandwidth) / max_bandwidth)
+	default_color = bandwidth_color
+	for port in [port1, port2]:
+		if port is SwitchPort:
+			port.material.set_shader_parameter("color", bandwidth_color)

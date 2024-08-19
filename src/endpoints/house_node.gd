@@ -6,7 +6,7 @@ var placed := false
 ## Colors the house either red (state: true) or black (state: false)
 func set_allocated_state(state: bool):
 	if state:
-		material.set_shader_parameter("color", Color(0, 0, 0)) # black
+		material.set_shader_parameter("color", Color(0, 1, 0)) # green
 	else:
 		material.set_shader_parameter("color", Color(1, 0, 0)) # red
 

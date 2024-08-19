@@ -27,12 +27,12 @@ material = SubResource("ShaderMaterial_xai6s")
 script = ExtResource("1_i8qi5")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-use_parent_material = true
 position = Vector2(0, -5)
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("2_7pdxc")
 
 [node name="HousePort" type="Area2D" parent="."]
+use_parent_material = true
 script = ExtResource("3_jxbag")
 
 [node name="PortSprite" type="Sprite2D" parent="HousePort"]
