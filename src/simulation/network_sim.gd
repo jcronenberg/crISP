@@ -75,6 +75,11 @@ func add_cable(cable: CableNode) -> void:
 
 
 func connect_cable(cable: Cable) -> void:
+	# If cables connect to the same node it would throw an error
+	# It's useless anyway and shouldn't have any effect if we just
+	# don't add it to path_calculator
+	if cable.endpoint1_id == cable.endpoint2_id:
+		return
 	path_calculator.connect_points(cable.endpoint1_id, cable.endpoint2_id)
 
 
