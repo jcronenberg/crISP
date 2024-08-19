@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://src/endpoints/wan_port.gd" id="1_qem1d"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3fbuq"]
-radius = 5.0
+radius = 15.0
 
 [node name="WANPort" type="Area2D"]
 script = ExtResource("1_qem1d")

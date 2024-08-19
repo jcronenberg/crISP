@@ -4,7 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://gxgi3r43dh4q" path="res://assets/black_circle.png" id="3_3hjed"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_k723k"]
-radius = 5.0
 
 [node name="SwitchPort" type="Area2D"]
 use_parent_material = true

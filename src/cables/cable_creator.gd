@@ -13,9 +13,10 @@ func _input(event):
 		var query := PhysicsPointQueryParameters2D.new()
 		query.collide_with_areas = true
 		query.position = get_global_mouse_position()
+		if Input.is_action_pressed("SnapToGrid"):
+			query.position = query.position.snapped(Vector2i(20, 20))
 		query.collide_with_bodies = false
 		var nodes = space_state.intersect_point(query)
-		#print(nodes) # debug
 		for node in nodes:
 			if node["collider"] is WanPort or node["collider"] is PortNode and not node["collider"].get_parent().is_port_connected:
 				if node["collider"] is not WanPort:
@@ -45,8 +46,10 @@ func _input(event):
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	var cursor_pos = get_global_mouse_position()
-	cable.set_point_position(cur_point, (cursor_pos - cable.global_position).snapped(Vector2i(20, 20)))
+	var cursor_pos: Vector2 = get_global_mouse_position()
+	if Input.is_action_pressed("SnapToGrid"):
+		cursor_pos = cursor_pos.snapped(Vector2i(20, 20))
+	cable.set_point_position(cur_point, cursor_pos - cable.global_position)
 
 
 func init(caller_port: PortNode) -> void:

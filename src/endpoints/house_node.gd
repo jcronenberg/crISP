@@ -19,7 +19,10 @@ func set_is_port_connected(state):
 func _process(_delta):
 	if not placed:
 		global_position = get_global_mouse_position()
-		global_position = global_position.snapped(Vector2i(20, 20))
+		var place_pos: Vector2 = get_global_mouse_position()
+		if Input.is_action_pressed("SnapToGrid"):
+			place_pos = place_pos.snapped(Vector2i(20, 20))
+		global_position = place_pos
 
 
 func _input(event):

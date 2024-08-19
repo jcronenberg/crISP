@@ -21,7 +21,6 @@ shader = SubResource("Shader_o8l8m")
 shader_parameter/color = Color(1, 0, 0, 1)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_34dc3"]
-radius = 5.0
 
 [node name="House" type="Node2D"]
 material = SubResource("ShaderMaterial_xai6s")
