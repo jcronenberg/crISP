@@ -18,10 +18,10 @@ func _input(event):
 		query.collide_with_bodies = false
 		var nodes = space_state.intersect_point(query)
 		for node in nodes:
-			if node["collider"] is WanPort or node["collider"] is PortNode and not node["collider"].get_parent().is_port_connected:
+			if node["collider"] is WanPort or node["collider"] is PortNode and not node["collider"].is_port_connected:
 				if node["collider"] is not WanPort:
 					node["collider"].connected_cable = cable
-					node["collider"].get_parent().set_is_port_connected(true)
+					node["collider"].is_port_connected = true
 				cable.port2 = node["collider"]
 				cable.set_point_position(cur_point, node["collider"].global_position - cable.global_position)
 				# Cable setup is finished, add to simulation and free creator
@@ -39,7 +39,7 @@ func _input(event):
 		cable.remove_point(cur_point)
 		cur_point = cur_point - 1
 	elif event.is_action_pressed("RClick"):
-		cable.port1.get_parent().set_is_port_connected(false)
+		cable.port1.is_port_connected = false
 		cable.queue_free()
 		queue_free()
 

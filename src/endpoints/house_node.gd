@@ -1,7 +1,6 @@
 class_name HouseNode
 extends EndpointNode
 
-var is_port_connected := false
 var placed := false
 
 ## Colors the house either red (state: true) or black (state: false)
@@ -10,10 +9,6 @@ func set_allocated_state(state: bool):
 		material.set_shader_parameter("color", Color(0, 0, 0)) # black
 	else:
 		material.set_shader_parameter("color", Color(1, 0, 0)) # red
-
-
-func set_is_port_connected(state):
-	is_port_connected = state
 
 
 func _process(_delta):

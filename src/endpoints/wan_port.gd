@@ -1,14 +1,16 @@
 class_name WanPort
 extends PortNode
 
-const is_port_connected := false
-
 func get_real_parent():
 	return self
 
-func _input_event(_viewport, _event, _shape_idx):
+func _input_event(_viewport, _event, _shape_idx) -> void:
 	pass
 
 # Nothing to do here
-func disconnect_port():
+func disconnect_port() -> void:
+	pass
+
+
+func set_is_port_connected(_value: bool) -> void:
 	pass

@@ -1,12 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://dul63201md3r7"]
+[gd_scene load_steps=6 format=3 uid="uid://dul63201md3r7"]
 
 [ext_resource type="Script" path="res://src/endpoints/switch_port.gd" id="1_0m0lw"]
+[ext_resource type="Shader" path="res://src/shaders/color.gdshader" id="1_r3luq"]
 [ext_resource type="Texture2D" uid="uid://gxgi3r43dh4q" path="res://assets/black_circle.png" id="3_3hjed"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jpqj1"]
+shader = ExtResource("1_r3luq")
+shader_parameter/color = Color(0, 1, 0, 1)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_k723k"]
 
 [node name="SwitchPort" type="Area2D"]
-use_parent_material = true
+material = SubResource("ShaderMaterial_jpqj1")
 script = ExtResource("1_0m0lw")
 
 [node name="PortSprite" type="Sprite2D" parent="."]
