@@ -66,4 +66,4 @@ SnapToGrid={
 
 [rendering]
 
-environment/defaults/default_clear_color=Color(1, 1, 1, 1)
+environment/defaults/default_clear_color=Color(0.00784314, 0.0823529, 0.14902, 1)

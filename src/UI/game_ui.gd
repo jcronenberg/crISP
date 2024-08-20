@@ -5,9 +5,9 @@ var _elapsed_time: float = 0.0 # TODO in the future this should probably be requ
 
 
 func _physics_process(delta: float) -> void:
-	%FPSCounter.text = "[color=black]%s" % str(Engine.get_frames_per_second())
+	%FPSCounter.text = str(Engine.get_frames_per_second())
 	_elapsed_time += delta
-	%Timer.text = "[center][color=black]%s" % str(round(_elapsed_time))
+	%Timer.text = str(round(_elapsed_time))
 
 
 func display_warning(text: String):
