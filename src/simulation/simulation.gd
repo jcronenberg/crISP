@@ -1,7 +1,7 @@
 class_name Simulation
 extends Node2D
 
-const cable_creator_scene = preload("res://src/cables/cable_creator.tscn")
+const cable_node_scene = preload("res://src/cables/cable_node.tscn")
 const switch_scene = preload("res://src/endpoints/switch_node.tscn")
 const house_scene = preload("res://src/endpoints/house_node.tscn")
 
@@ -29,9 +29,9 @@ func _physics_process(_delta: float) -> void:
 
 
 func request_cable_creation(request_port: PortNode) -> void:
-	var cable_creator: CableCreator = cable_creator_scene.instantiate()
-	add_child(cable_creator)
-	cable_creator.init(request_port)
+	var new_cable: CableNode = cable_node_scene.instantiate()
+	new_cable.port1 = request_port
+	%Cables.add_child(new_cable)
 
 
 func add_cable_to_sim(cable: CableNode) -> void:

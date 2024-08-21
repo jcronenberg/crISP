@@ -12,5 +12,9 @@ func disconnect_port() -> void:
 	pass
 
 
+func set_connected_cable(_value: CableNode) -> void:
+	pass
+
+
 func set_is_port_connected(_value: bool) -> void:
 	pass

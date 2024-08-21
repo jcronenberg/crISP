@@ -6,7 +6,7 @@ func get_real_parent() -> Node2D:
 	return get_parent()
 
 
-func move_connected_cable(position_diff: Vector2) -> void:
+func move_connected_cable(position_diff: Vector2, final: bool) -> void:
 	if not connected_cable:
 		return
 	var point_id
@@ -15,6 +15,8 @@ func move_connected_cable(position_diff: Vector2) -> void:
 	else:
 		point_id = connected_cable.get_point_count() - 1
 	connected_cable.set_point_position(point_id, connected_cable.get_point_position(point_id) - position_diff)
+	if final:
+		connected_cable.set_cable_collision()
 
 
 func set_is_port_connected(value: bool) -> void:

@@ -2,7 +2,8 @@ class_name PortNode
 extends Area2D
 
 const is_endpoint = true
-var connected_cable: CableNode = null
+var connected_cable: CableNode = null:
+	set = set_connected_cable
 var is_port_connected: bool = false:
 	set = set_is_port_connected
 
@@ -28,6 +29,10 @@ func _input_event(_viewport, event, _shape_idx) -> void:
 func disconnect_port() -> void:
 	connected_cable = null
 	is_port_connected = false
+
+
+func set_connected_cable(value: CableNode) -> void:
+	connected_cable = value
 
 
 # Needed so we can override it in WanPort and always set it to true there
