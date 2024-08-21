@@ -33,6 +33,7 @@ func _init() -> void:
 func _ready() -> void:
 	# generate_grid()
 	_generate_grid_cell_at(0, 0)
+	_generated_cells += 1
 	pass
 
 
