@@ -19,7 +19,9 @@ func move_connected_cable(position_diff: Vector2, final: bool) -> void:
 		connected_cable.set_cable_collision()
 
 
-func set_is_port_connected(value: bool) -> void:
-	is_port_connected = value
+func set_connected_cable(value: CableNode) -> void:
+	connected_cable = value
+
+	# Reset color if we are no longer connected
 	if not is_port_connected:
 		material.set_shader_parameter("color", Color(0, 1, 0))

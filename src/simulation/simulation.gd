@@ -46,9 +46,6 @@ func add_cable(cable: CableNode) -> void:
 
 func delete_cable(cable: CableNode) -> void:
 	sim_change_happened = true
-
-	cable.port1.disconnect_port()
-	cable.port2.disconnect_port()
 	_network_sim.delete_cable(cable)
 	cable.queue_free()
 

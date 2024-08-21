@@ -53,7 +53,6 @@ func _input(event: InputEvent):
 
 				# Connect to port
 				node["collider"].connected_cable = self
-				node["collider"].is_port_connected = true
 
 				port2 = node["collider"]
 				set_point_position(points.size() - 1, node["collider"].global_position - global_position)
@@ -74,9 +73,7 @@ func _input(event: InputEvent):
 	if event.is_action_pressed("RClick") and points.size() > 2:
 		remove_point(points.size() - 1)
 	elif event.is_action_pressed("RClick"):
-		port1.is_port_connected = false
-		port1.connected_cable = null
-		queue_free()
+		free_cable()
 
 
 func _process(_delta: float) -> void:
@@ -94,8 +91,12 @@ func set_cable_collision() -> void:
 		child.queue_free()
 
 	# Add new collision areas
-	add_child(cable_line_collision_area())
-	add_child(cable_point_collision_area())
+	var line_collision_area: Area2D = cable_line_collision_area()
+	line_collision_area.connect("input_event", _on_line_collision_input_event)
+	add_child(line_collision_area)
+	var point_collision_area: Area2D = cable_point_collision_area()
+	point_collision_area.connect("input_event", _on_point_collision_input_event)
+	add_child(point_collision_area)
 
 
 func cable_line_collision_area() -> Area2D:
@@ -132,3 +133,29 @@ func rotated_rectangle_points() -> Array[CollisionPolygon2D]:
 		col_polys.append(poly)
 
 	return col_polys
+
+
+func free_cable() -> void:
+	if port1:
+		port1.connected_cable = null
+	if port2:
+		port2.connected_cable = null
+	queue_free()
+	Global.get_current_simulation().delete_cable(self)
+
+
+func _on_line_collision_input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
+	if event is not InputEventMouseButton or not event.pressed:
+		return
+
+	if Global.cursor_mode == Global.CursorModes.DELETE_CABLE:
+		free_cable()
+
+
+# TODO allow moving of points
+func _on_point_collision_input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
+	if event is not InputEventMouseButton or not event.pressed:
+		return
+
+	if Global.cursor_mode == Global.CursorModes.DELETE_CABLE:
+		free_cable()
