@@ -10,8 +10,15 @@ var port1: PortNode = null:
 		global_position = port.global_position
 		add_point(port.global_position)
 var port2: PortNode = null
-var cable_type: Global.CableTypes
-var max_bandwidth: int = 1000
+var cable_type: Global.CableTypes:
+	set(value):
+		cable_type = value
+		if value == Global.CableTypes.COPPER:
+			max_bandwidth = 250
+			texture = null
+		elif value == Global.CableTypes.FIBER:
+			max_bandwidth = 1000
+var max_bandwidth: int
 var cur_bandwidth: int = 0
 var being_edited: bool = true:
 	set(value):
@@ -19,19 +26,9 @@ var being_edited: bool = true:
 		set_process(value)
 		set_process_input(value)
 
+
 func _ready() -> void:
 	cable_type = Global.selected_cable_type
-	if cable_type == Global.CableTypes.COPPER:
-		texture = null
-		max_bandwidth = 250
-
-func update_cur_bandwidth(bandwidth: int) -> void:
-	cur_bandwidth = bandwidth
-	var bandwidth_color: Color = cable_gradient.sample(float(cur_bandwidth) / max_bandwidth)
-	default_color = bandwidth_color
-	for port: PortNode in [port1, port2]:
-		if port is SwitchPort:
-			port.material.set_shader_parameter("color", bandwidth_color)
 
 
 func _input(event: InputEvent) -> void:
@@ -72,11 +69,11 @@ func _input(event: InputEvent) -> void:
 		# Add new point, position doesn't matter, it get's set by _process
 		add_point(Vector2(0, 0))
 	elif event.is_action_pressed("Cancel"):
-		free_cable()
+		queue_free()
 	elif event.is_action_pressed("Back") and points.size() > 2:
 		remove_point(points.size() - 1)
 	elif event.is_action_pressed("Back"):
-		free_cable()
+		queue_free()
 
 
 func _process(_delta: float) -> void:
@@ -84,6 +81,23 @@ func _process(_delta: float) -> void:
 	if Input.is_action_pressed("SnapToGrid"):
 		cursor_pos = cursor_pos.snapped(Vector2i(20, 20))
 	set_point_position(points.size() - 1, cursor_pos - global_position)
+
+
+func _exit_tree() -> void:
+	if port1 and is_instance_valid(port1):
+		port1.connected_cable = null
+	if port2 and is_instance_valid(port2):
+		port2.connected_cable = null
+	Global.get_current_simulation().delete_cable(self)
+
+
+func update_cur_bandwidth(bandwidth: int) -> void:
+	cur_bandwidth = bandwidth
+	var bandwidth_color: Color = cable_gradient.sample(float(cur_bandwidth) / max_bandwidth)
+	default_color = bandwidth_color
+	for port: PortNode in [port1, port2]:
+		if port is SwitchPort:
+			port.material.set_shader_parameter("color", bandwidth_color)
 
 
 func set_cable_collision() -> void:
@@ -138,21 +152,12 @@ func rotated_rectangle_points() -> Array[CollisionPolygon2D]:
 	return col_polys
 
 
-func free_cable() -> void:
-	if port1:
-		port1.connected_cable = null
-	if port2:
-		port2.connected_cable = null
-	queue_free()
-	Global.get_current_simulation().delete_cable(self)
-
-
 func _on_line_collision_input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
 	if event is not InputEventMouseButton or not event.pressed:
 		return
 
 	if event.is_action_pressed("Use") and Global.cursor_mode == Global.CursorModes.DELETE_CABLE:
-		free_cable()
+		queue_free()
 
 
 # TODO allow moving of points
@@ -161,4 +166,4 @@ func _on_point_collision_input_event(_viewport: Viewport, event: InputEvent, _sh
 		return
 
 	if event.is_action_pressed("Use") and Global.cursor_mode == Global.CursorModes.DELETE_CABLE:
-		free_cable()
+		queue_free()

@@ -7,9 +7,6 @@ var connected_cable: CableNode = null:
 var is_port_connected: bool:
 	get = get_is_port_connected
 
-func get_real_parent() -> Node2D:
-	push_error("Shouldn't have been called without overwrite")
-	return null
 
 func _input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
 	if (
@@ -18,6 +15,16 @@ func _input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> vo
 			and Global.cursor_mode == Global.CursorModes.CABLE
 			):
 		Global.get_current_simulation().request_cable_creation(self)
+
+
+func _exit_tree() -> void:
+	if connected_cable:
+		connected_cable.queue_free()
+
+
+func get_real_parent() -> Node2D:
+	push_error("Shouldn't have been called without overwrite")
+	return null
 
 
 func set_connected_cable(value: CableNode) -> void:
