@@ -1,4 +1,5 @@
-# Author Julian Vos
+# SPDX-License-Identifier: MIT
+# Author: Julian Vos
 # Source: https://github.com/Julian-Vos/asset-library-MapCamera2D-4
 class_name MapCamera2D
 extends Camera2D
