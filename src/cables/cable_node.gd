@@ -1,6 +1,8 @@
 class_name CableNode
 extends Line2D
 
+const cable_gradient = preload("res://resources/cable_gradient.tres")
+
 var port1: PortNode = null:
 	set(port):
 		port1 = port
@@ -11,29 +13,28 @@ var port2: PortNode = null
 var cable_type: Global.CableTypes
 var max_bandwidth: int = 1000
 var cur_bandwidth: int = 0
-@onready var cable_gradient = load("res://resources/cable_gradient.tres")
 var being_edited: bool = true:
 	set(value):
 		being_edited = value
 		set_process(value)
 		set_process_input(value)
 
-func _ready():
+func _ready() -> void:
 	cable_type = Global.selected_cable_type
 	if cable_type == Global.CableTypes.COPPER:
 		texture = null
 		max_bandwidth = 250
 
-func update_cur_bandwidth(bandwidth: int):
+func update_cur_bandwidth(bandwidth: int) -> void:
 	cur_bandwidth = bandwidth
 	var bandwidth_color: Color = cable_gradient.sample(float(cur_bandwidth) / max_bandwidth)
 	default_color = bandwidth_color
-	for port in [port1, port2]:
+	for port: PortNode in [port1, port2]:
 		if port is SwitchPort:
 			port.material.set_shader_parameter("color", bandwidth_color)
 
 
-func _input(event: InputEvent):
+func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Use"):
 		# Check if position under cursor is possible endpoint
 		var space_rid := get_world_2d().space
@@ -44,18 +45,19 @@ func _input(event: InputEvent):
 		if Input.is_action_pressed("SnapToGrid"):
 			query.position = query.position.snapped(Vector2i(20, 20))
 		query.collide_with_bodies = false
-		var nodes = space_state.intersect_point(query)
+		var nodes: Array[Dictionary] = space_state.intersect_point(query)
 		for node in nodes:
-			if node["collider"] is WanPort or node["collider"] is PortNode and not node["collider"].is_port_connected:
+			if node["collider"] is PortNode and not node["collider"].is_port_connected:
+				var collider: PortNode = node["collider"]
 				# stop _process, otherwise we run into a race condition
 				# where _process also tries to set the last point's position
 				being_edited = false
 
 				# Connect to port
-				node["collider"].connected_cable = self
+				collider.connected_cable = self
 
-				port2 = node["collider"]
-				set_point_position(points.size() - 1, node["collider"].global_position - global_position)
+				port2 = collider
+				set_point_position(points.size() - 1, collider.global_position - global_position)
 
 				# Add collision
 				set_cable_collision()

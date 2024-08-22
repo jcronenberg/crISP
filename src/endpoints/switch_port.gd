@@ -9,7 +9,7 @@ func get_real_parent() -> Node2D:
 func move_connected_cable(position_diff: Vector2, final: bool) -> void:
 	if not connected_cable:
 		return
-	var point_id
+	var point_id: int
 	if connected_cable.port1 == self:
 		point_id = 0
 	else:

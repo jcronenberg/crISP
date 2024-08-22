@@ -154,11 +154,11 @@ func allocate_houses() -> void:
 	if allocation_successful and not houses_allocated_state:
 		houses_allocated_state = true
 		# Call to main_thread
-		emit_signal("houses_allocated", true)
+		houses_allocated.emit(true)
 	elif not allocation_successful and houses_allocated_state:
 		houses_allocated_state = false
 		# Call to main_thread
-		emit_signal("houses_allocated", false)
+		houses_allocated.emit(false)
 
 
 func _get_possible_bandwidth_for_path(path: Array[Cable]) -> int:
@@ -212,7 +212,7 @@ class Endpoint:
 
 class WanEndpoint extends Endpoint:
 
-	func _init():
+	func _init() -> void:
 		sim_id = 0
 
 
@@ -278,11 +278,11 @@ class Cable:
 
 class CopperCable extends Cable:
 
-	func _init():
+	func _init() -> void:
 		max_bandwidth = 250
 
 
 class FiberCable extends Cable:
 
-	func _init():
+	func _init() -> void:
 		max_bandwidth = 1000

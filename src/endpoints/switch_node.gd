@@ -12,9 +12,9 @@ var placed: bool = false:
 		if value:
 			move_connected_cables(Vector2.ZERO, true)
 
-func _process(_delta):
+func _process(_delta: float) -> void:
 	if not placed:
-		var old_position = global_position
+		var old_position: Vector2 = global_position
 		var place_pos: Vector2 = get_global_mouse_position()
 		if Input.is_action_pressed("SnapToGrid"):
 			place_pos = place_pos.snapped(Vector2i(20, 20))
@@ -23,7 +23,7 @@ func _process(_delta):
 			move_connected_cables(old_position - global_position)
 
 
-func _input(event):
+func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Use"):
 		placed = true
 		Global.get_current_simulation().add_endpoint(self)
@@ -33,7 +33,7 @@ func _input(event):
 
 
 ## [param final] is if the position is final (so the collision of the cables should be updated)
-func move_connected_cables(position_diff: Vector2, final: bool = false):
+func move_connected_cables(position_diff: Vector2, final: bool = false) -> void:
 	for child in get_children():
 		if child.has_method("move_connected_cable"):
 			child.move_connected_cable(position_diff, final)

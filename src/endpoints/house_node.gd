@@ -4,14 +4,14 @@ extends EndpointNode
 var placed := false
 
 ## Colors the house either red (state: true) or black (state: false)
-func set_allocated_state(state: bool):
+func set_allocated_state(state: bool) -> void:
 	if state:
 		material.set_shader_parameter("color", Color(0, 1, 0)) # green
 	else:
 		material.set_shader_parameter("color", Color(1, 0, 0)) # red
 
 
-func _process(_delta):
+func _process(_delta: float) -> void:
 	if not placed:
 		global_position = get_global_mouse_position()
 		var place_pos: Vector2 = get_global_mouse_position()
@@ -20,7 +20,7 @@ func _process(_delta):
 		global_position = place_pos
 
 
-func _input(event):
+func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Use"):
 		placed = true
 		Global.get_current_simulation().add_endpoint(self)

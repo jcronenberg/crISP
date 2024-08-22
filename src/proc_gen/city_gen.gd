@@ -60,7 +60,7 @@ func _generate_grid_cell_at(x: int, y: int) -> bool:
 		_grid[x][y] = _generate_grid_cell(GridCellType.EMPTY, cell_size * grid_cell_size * Vector2i(x, y) + Vector2i(x, y) * road_thickness)
 	else:
 		_grid[x][y] = _generate_grid_cell(GridCellType.values().filter(
-				func(type: GridCellType): return not type in [GridCellType.EMPTY]
+				func(type: GridCellType) -> bool: return not type in [GridCellType.EMPTY]
 			).pick_random(),
 			cell_size * grid_cell_size * Vector2i(x, y) + Vector2i(x, y) * road_thickness)
 

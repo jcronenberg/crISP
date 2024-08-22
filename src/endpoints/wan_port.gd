@@ -1,10 +1,10 @@
 class_name WanPort
 extends PortNode
 
-func get_real_parent():
+func get_real_parent() -> Node2D:
 	return self
 
-func _input_event(_viewport, _event, _shape_idx) -> void:
+func _input_event(_viewport: Viewport, _event: InputEvent, _shape_idx: int) -> void:
 	pass
 
 # Nothing to do here
