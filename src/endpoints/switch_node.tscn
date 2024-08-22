@@ -1,7 +1,6 @@
-[gd_scene load_steps=16 format=3 uid="uid://wn2ch8bgv060"]
+[gd_scene load_steps=15 format=3 uid="uid://wn2ch8bgv060"]
 
 [ext_resource type="Script" path="res://src/endpoints/switch_node.gd" id="1_14c4t"]
-[ext_resource type="Script" path="res://src/endpoints/switch_body_area.gd" id="2_icf0f"]
 [ext_resource type="PackedScene" uid="uid://dul63201md3r7" path="res://src/endpoints/switch_port.tscn" id="5_pmew2"]
 [ext_resource type="Shader" path="res://src/shaders/color.gdshader" id="6_i6rcj"]
 
@@ -62,7 +61,6 @@ shader_parameter/color = Color(0, 1, 0, 1)
 script = ExtResource("1_14c4t")
 
 [node name="SwitchBodyArea" type="Area2D" parent="."]
-script = ExtResource("2_icf0f")
 
 [node name="SwitchBody" type="Polygon2D" parent="SwitchBodyArea"]
 color = Color(0, 0, 0, 1)
@@ -110,3 +108,5 @@ position = Vector2(20, 10)
 [node name="Port10" parent="." instance=ExtResource("5_pmew2")]
 material = SubResource("ShaderMaterial_s167i")
 position = Vector2(40, 10)
+
+[connection signal="input_event" from="SwitchBodyArea" to="." method="_on_switch_body_area_input_event"]

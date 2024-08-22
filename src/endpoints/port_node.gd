@@ -7,12 +7,13 @@ var connected_cable: CableNode = null:
 var is_port_connected: bool:
 	get = get_is_port_connected
 
-func get_real_parent():
+func get_real_parent() -> Node2D:
 	push_error("Shouldn't have been called without overwrite")
+	return null
 
-func _input_event(_viewport, event, _shape_idx) -> void:
+func _input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
 	if (
-			event.is_action_pressed("LClick")
+			event.is_action_pressed("Use")
 			and not is_port_connected
 			and Global.cursor_mode == Global.CursorModes.CABLE
 			):

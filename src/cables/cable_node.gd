@@ -34,7 +34,7 @@ func update_cur_bandwidth(bandwidth: int):
 
 
 func _input(event: InputEvent):
-	if event.is_action_pressed("LClick"):
+	if event.is_action_pressed("Use"):
 		# Check if position under cursor is possible endpoint
 		var space_rid := get_world_2d().space
 		var space_state := PhysicsServer2D.space_get_direct_state(space_rid)
@@ -69,10 +69,11 @@ func _input(event: InputEvent):
 
 		# Add new point, position doesn't matter, it get's set by _process
 		add_point(Vector2(0, 0))
-
-	if event.is_action_pressed("RClick") and points.size() > 2:
+	elif event.is_action_pressed("Cancel"):
+		free_cable()
+	elif event.is_action_pressed("Back") and points.size() > 2:
 		remove_point(points.size() - 1)
-	elif event.is_action_pressed("RClick"):
+	elif event.is_action_pressed("Back"):
 		free_cable()
 
 
@@ -148,7 +149,7 @@ func _on_line_collision_input_event(_viewport: Viewport, event: InputEvent, _sha
 	if event is not InputEventMouseButton or not event.pressed:
 		return
 
-	if Global.cursor_mode == Global.CursorModes.DELETE_CABLE:
+	if event.is_action_pressed("Use") and Global.cursor_mode == Global.CursorModes.DELETE_CABLE:
 		free_cable()
 
 
@@ -157,5 +158,5 @@ func _on_point_collision_input_event(_viewport: Viewport, event: InputEvent, _sh
 	if event is not InputEventMouseButton or not event.pressed:
 		return
 
-	if Global.cursor_mode == Global.CursorModes.DELETE_CABLE:
+	if event.is_action_pressed("Use") and Global.cursor_mode == Global.CursorModes.DELETE_CABLE:
 		free_cable()

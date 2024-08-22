@@ -21,11 +21,11 @@ func _process(_delta):
 
 
 func _input(event):
-	if event.is_action_pressed("LClick"):
+	if event.is_action_pressed("Use"):
 		placed = true
 		Global.get_current_simulation().add_endpoint(self)
 		set_process(false)
 		set_process_input(false)
 		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("RClick") or event.is_action_pressed("Cancel"):
+	elif event.is_action_pressed("Back") or event.is_action_pressed("Cancel"):
 		queue_free()

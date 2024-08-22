@@ -24,11 +24,11 @@ func _process(_delta):
 
 
 func _input(event):
-	if event.is_action_pressed("LClick"):
+	if event.is_action_pressed("Use"):
 		placed = true
 		Global.get_current_simulation().add_endpoint(self)
 		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("RClick") or event.is_action_pressed("Cancel"):
+	elif event.is_action_pressed("Back") or event.is_action_pressed("Cancel"):
 		queue_free()
 
 
@@ -37,3 +37,14 @@ func move_connected_cables(position_diff: Vector2, final: bool = false):
 	for child in get_children():
 		if child.has_method("move_connected_cable"):
 			child.move_connected_cable(position_diff, final)
+
+
+func _on_switch_body_area_input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
+	if (
+			event.is_action_pressed("Use")
+			and Global.cursor_mode == Global.CursorModes.MOVE_SWITCH
+			and placed
+			):
+		placed = false
+		set_process(true)
+		set_process_input(true)
