@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://g7prnvkrx7xb"]
 
 [ext_resource type="Script" path="res://src/simulation/simulation.gd" id="1_f7ilh"]
-[ext_resource type="Script" path="res://src/simulation/camera.gd" id="2_bxsqd"]
+[ext_resource type="Script" path="res://addons/map_camera_2d/map_camera_2d.gd" id="2_kqftb"]
 [ext_resource type="PackedScene" uid="uid://c75ksq31jylr" path="res://src/endpoints/wan_port.tscn" id="5_tgaow"]
 [ext_resource type="Script" path="res://src/proc_gen/city_gen.gd" id="9_wiy4f"]
 
@@ -9,7 +9,12 @@
 script = ExtResource("1_f7ilh")
 
 [node name="Camera" type="Camera2D" parent="."]
-script = ExtResource("2_bxsqd")
+position_smoothing_enabled = true
+position_smoothing_speed = 20.0
+script = ExtResource("2_kqftb")
+pan_speed = 1000.0
+pan_margin = 0.0
+drag_inertia = 0.0
 
 [node name="Parks" type="Node2D" parent="."]
 unique_name_in_owner = true
