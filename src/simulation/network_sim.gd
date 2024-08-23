@@ -129,9 +129,21 @@ func get_cables_for_path(path: PackedInt64Array) -> Array[Cable]:
 func delete_cable(cable_node: CableNode) -> void:
 	for cable in cables:
 		if cable.node_ref == cable_node:
-			endpoints[cable.endpoint1_id].remove_cable(cable)
-			endpoints[cable.endpoint2_id].remove_cable(cable)
+			# if delete endpoint was called the endpoint may be null already
+			if endpoints[cable.endpoint1_id]:
+				endpoints[cable.endpoint1_id].remove_cable(cable)
+			if endpoints[cable.endpoint2_id]:
+				endpoints[cable.endpoint2_id].remove_cable(cable)
+
 			cables.erase(cable)
+
+
+# Connected cables will also get freed and with that should call delete_cable
+# so we don't need to worry about the connected cables
+func delete_endpoint(endpoint_node: EndpointNode) -> void:
+	for endpoint in endpoints:
+		if endpoint and endpoint.node_ref == endpoint_node:
+			endpoints[endpoints.find(endpoint)] = null
 
 
 func reset_bandwidth_state() -> void:
@@ -175,7 +187,7 @@ func _get_possible_bandwidth_for_path(path: Array[Cable]) -> int:
 
 func _find_endpoint_id_by_node(node: Node2D) -> int:
 	for endpoint in endpoints:
-		if endpoint.node_ref == node:
+		if endpoint and endpoint.node_ref == node:
 			return endpoint.sim_id
 
 	return -1

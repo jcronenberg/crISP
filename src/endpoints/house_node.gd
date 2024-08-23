@@ -23,7 +23,7 @@ func _process(_delta: float) -> void:
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Use"):
 		placed = true
-		Global.get_current_simulation().add_endpoint(self)
+		Global.current_simulation.add_endpoint(self)
 		set_process(false)
 		set_process_input(false)
 		get_viewport().set_input_as_handled()

@@ -15,4 +15,3 @@ unique_name_in_owner = true
 [node name="GameUI" parent="CanvasLayer" instance=ExtResource("2_xc3vi")]
 unique_name_in_owner = true
 size_flags_horizontal = 0
-mouse_filter = 1

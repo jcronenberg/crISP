@@ -23,10 +23,15 @@ func _process(_delta: float) -> void:
 			move_connected_cables(old_position - global_position)
 
 
+func _exit_tree() -> void:
+	Global.current_simulation.remove_endpoint(self)
+	Global.current_simulation.unselect_node(self)
+
+
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("Use"):
+	if event.is_action_pressed("Use") and not placed:
 		placed = true
-		Global.get_current_simulation().add_endpoint(self)
+		Global.current_simulation.add_endpoint(self)
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("Back") or event.is_action_pressed("Cancel"):
 		queue_free()
@@ -39,12 +44,23 @@ func move_connected_cables(position_diff: Vector2, final: bool = false) -> void:
 			child.move_connected_cable(position_diff, final)
 
 
+func highlight(state: bool) -> void:
+	if is_queued_for_deletion():
+		return
+
+	%Outline.visible = state
+	%SelectedUI.visible = state
+	z_index = 1 if state else 0
+
+
 func _on_switch_body_area_input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
-	if (
-			event.is_action_pressed("Use")
-			and Global.cursor_mode == Global.CursorModes.MOVE_SWITCH
-			and placed
-			):
-		placed = false
-		set_process(true)
-		set_process_input(true)
+	if event.is_action_pressed("Use"):
+		Global.current_simulation.select_node(self)
+
+
+func _on_delete_button_pressed() -> void:
+	queue_free()
+
+
+func _on_move_button_pressed() -> void:
+	placed = false

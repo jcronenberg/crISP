@@ -19,21 +19,21 @@ func hide_warning() -> void:
 	%WarningLabel.visible = false
 
 
-func _on_move_switch_button_pressed() -> void:
-	Global.cursor_mode = Global.CursorModes.MOVE_SWITCH
+func toggle_delete_cable_button_visibility(state: bool) -> void:
+	%DeleteCableButton.visible = state
 
 
 func _on_delete_cable_button_pressed() -> void:
-	Global.cursor_mode = Global.CursorModes.DELETE_CABLE
+	Global.current_simulation.delete_selected_nodes()
 
 
 func _on_new_switch_button_pressed() -> void:
-	Global.get_current_simulation().create_switch()
+	Global.current_simulation.create_switch()
 	Global.cursor_mode = Global.CursorModes.CABLE
 
 
 func _on_new_house_button_pressed() -> void:
-	Global.get_current_simulation().create_house()
+	Global.current_simulation.create_house()
 	Global.cursor_mode = Global.CursorModes.CABLE
 
 

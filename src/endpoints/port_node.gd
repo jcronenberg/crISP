@@ -8,13 +8,18 @@ var is_port_connected: bool:
 	get = get_is_port_connected
 
 
-func _input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
+func _ready() -> void:
+	connect("input_event", _on_input_event)
+
+
+func _on_input_event(viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
 	if (
 			event.is_action_pressed("Use")
 			and not is_port_connected
 			and Global.cursor_mode == Global.CursorModes.CABLE
 			):
-		Global.get_current_simulation().request_cable_creation(self)
+		Global.current_simulation.request_cable_creation(self)
+		viewport.set_input_as_handled()
 
 
 func _exit_tree() -> void:

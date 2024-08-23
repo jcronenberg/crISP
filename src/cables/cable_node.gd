@@ -8,7 +8,7 @@ var port1: PortNode = null:
 		port1 = port
 		port.connected_cable = self
 		global_position = port.global_position
-		add_point(port.global_position)
+		cable_add_point(port.global_position)
 var port2: PortNode = null
 var cable_type: Global.CableTypes:
 	set(value):
@@ -34,9 +34,9 @@ func _ready() -> void:
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Use"):
 		# Check if position under cursor is possible endpoint
-		var space_rid := get_world_2d().space
-		var space_state := PhysicsServer2D.space_get_direct_state(space_rid)
-		var query := PhysicsPointQueryParameters2D.new()
+		var space_rid: RID = get_world_2d().space
+		var space_state: PhysicsDirectSpaceState2D = PhysicsServer2D.space_get_direct_state(space_rid)
+		var query: PhysicsPointQueryParameters2D = PhysicsPointQueryParameters2D.new()
 		query.collide_with_areas = true
 		query.position = get_global_mouse_position()
 		if Input.is_action_pressed("SnapToGrid"):
@@ -54,24 +54,27 @@ func _input(event: InputEvent) -> void:
 				collider.connected_cable = self
 
 				port2 = collider
-				set_point_position(points.size() - 1, collider.global_position - global_position)
+				cable_set_point_position(points.size() - 1, collider.global_position - global_position)
 
 				# Add collision
 				set_cable_collision()
 
 				# Setup is finished, add to simulation
-				Global.get_current_simulation().add_cable_to_sim(self)
+				Global.current_simulation.add_cable_to_sim(self)
+
+				# Set input as handled so we don't select the cable immediately
+				get_viewport().set_input_as_handled()
 				return
 			# Invalid because point is an endpoint but not free
 			elif "is_endpoint" in node["collider"]:
 				return
 
 		# Add new point, position doesn't matter, it get's set by _process
-		add_point(Vector2(0, 0))
+		cable_add_point(Vector2(0, 0))
 	elif event.is_action_pressed("Cancel"):
 		queue_free()
 	elif event.is_action_pressed("Back") and points.size() > 2:
-		remove_point(points.size() - 1)
+		cable_remove_point(points.size() - 1)
 	elif event.is_action_pressed("Back"):
 		queue_free()
 
@@ -80,7 +83,7 @@ func _process(_delta: float) -> void:
 	var cursor_pos: Vector2 = get_global_mouse_position()
 	if Input.is_action_pressed("SnapToGrid"):
 		cursor_pos = cursor_pos.snapped(Vector2i(20, 20))
-	set_point_position(points.size() - 1, cursor_pos - global_position)
+	cable_set_point_position(points.size() - 1, cursor_pos - global_position)
 
 
 func _exit_tree() -> void:
@@ -88,7 +91,26 @@ func _exit_tree() -> void:
 		port1.connected_cable = null
 	if port2 and is_instance_valid(port2):
 		port2.connected_cable = null
-	Global.get_current_simulation().delete_cable(self)
+	Global.current_simulation.delete_cable(self)
+	Global.current_simulation.unselect_node(self)
+
+
+## Wrapper, that adds the point to both the cable and the outline
+func cable_add_point(point: Vector2) -> void:
+	add_point(point)
+	%Outline.add_point(point)
+
+
+## Wrapper, that sets a point's position on both the cable and the outline
+func cable_set_point_position(point_index: int, point: Vector2) -> void:
+	set_point_position(point_index, point)
+	%Outline.set_point_position(point_index, point)
+
+
+## Wrapper, that removes the point from both the cable and the outline
+func cable_remove_point(point_index: int) -> void:
+	remove_point(point_index)
+	%Outline.remove_point(point_index)
 
 
 func update_cur_bandwidth(bandwidth: int) -> void:
@@ -152,18 +174,27 @@ func rotated_rectangle_points() -> Array[CollisionPolygon2D]:
 	return col_polys
 
 
-func _on_line_collision_input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
+func highlight(state: bool) -> void:
+	if being_edited or is_queued_for_deletion():
+		return
+	%Outline.visible = state
+	z_index = 1 if state else 0
+
+
+func _generic_input(event: InputEvent) -> void:
 	if event is not InputEventMouseButton or not event.pressed:
 		return
 
-	if event.is_action_pressed("Use") and Global.cursor_mode == Global.CursorModes.DELETE_CABLE:
-		queue_free()
+	elif event.is_action_pressed("Use"):
+		Global.current_simulation.select_node(self)
+
+
+func _on_line_collision_input_event(viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
+	_generic_input(event)
+	viewport.set_input_as_handled()
 
 
 # TODO allow moving of points
-func _on_point_collision_input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
-	if event is not InputEventMouseButton or not event.pressed:
-		return
-
-	if event.is_action_pressed("Use") and Global.cursor_mode == Global.CursorModes.DELETE_CABLE:
-		queue_free()
+func _on_point_collision_input_event(viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
+	_generic_input(event)
+	viewport.set_input_as_handled()

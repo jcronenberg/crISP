@@ -66,6 +66,13 @@ script = ExtResource("1_14c4t")
 color = Color(0, 0, 0, 1)
 polygon = PackedVector2Array(-50, -20, -50, 20, 50, 20, 50, -20)
 
+[node name="Outline" type="Polygon2D" parent="SwitchBodyArea/SwitchBody"]
+unique_name_in_owner = true
+visible = false
+show_behind_parent = true
+color = Color(1, 1, 1, 0.705882)
+polygon = PackedVector2Array(-53, -23, -53, 23, 53, 23, 53, -23)
+
 [node name="SwitchBodyCollision" type="CollisionShape2D" parent="SwitchBodyArea"]
 shape = SubResource("RectangleShape2D_lj5gn")
 
@@ -109,4 +116,28 @@ position = Vector2(20, 10)
 material = SubResource("ShaderMaterial_s167i")
 position = Vector2(40, 10)
 
+[node name="SelectedUI" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+z_index = 2
+offset_left = 53.0
+offset_top = -23.0
+offset_right = 73.0
+offset_bottom = 23.0
+theme_override_constants/separation = 2
+
+[node name="DeleteButton" type="Button" parent="SelectedUI"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 8
+text = "D"
+
+[node name="MoveButton" type="Button" parent="SelectedUI"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 8
+text = "M"
+
 [connection signal="input_event" from="SwitchBodyArea" to="." method="_on_switch_body_area_input_event"]
+[connection signal="pressed" from="SelectedUI/DeleteButton" to="." method="_on_delete_button_pressed"]
+[connection signal="pressed" from="SelectedUI/MoveButton" to="." method="_on_move_button_pressed"]

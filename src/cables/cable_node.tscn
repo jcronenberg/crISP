@@ -15,3 +15,14 @@ joint_mode = 2
 round_precision = 32
 antialiased = true
 script = ExtResource("2_jdo53")
+
+[node name="Outline" type="Line2D" parent="."]
+unique_name_in_owner = true
+visible = false
+show_behind_parent = true
+points = PackedVector2Array(0, 0)
+width = 8.0
+default_color = Color(1, 1, 1, 0.705882)
+joint_mode = 2
+round_precision = 32
+antialiased = true

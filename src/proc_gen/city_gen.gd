@@ -82,7 +82,7 @@ func _generate_grid_cell(type: GridCellType, cell_center: Vector2i) -> GridCell:
 			for y in grid_cell_size.y:
 				var new_node: Node2D
 				if type == GridCellType.HOUSING:
-					new_node = Global.get_current_simulation().create_placed_house_at(cell_center + Vector2i(x, y) * cell_size)
+					new_node = Global.current_simulation.create_placed_house_at(cell_center + Vector2i(x, y) * cell_size)
 				else:
 					continue
 
