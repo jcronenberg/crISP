@@ -1,0 +1,123 @@
+[gd_scene load_steps=9 format=3 uid="uid://mucs664lhk16"]
+
+[ext_resource type="Script" path="res://src/3d/city_3d.gd" id="1_epjle"]
+[ext_resource type="Script" path="res://src/3d/camera_3d.gd" id="2_e3nog"]
+[ext_resource type="PackedScene" uid="uid://bxgej476jhan7" path="res://src/3d/ui_3d.tscn" id="3_jkqxy"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0bj80"]
+albedo_color = Color(0.00784314, 0.0823529, 0.14902, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_fxfsi"]
+material = SubResource("StandardMaterial3D_0bj80")
+size = Vector2(10000, 10000)
+
+[sub_resource type="MultiMesh" id="MultiMesh_s3xvh"]
+transform_format = 1
+
+[sub_resource type="MultiMesh" id="MultiMesh_v0lll"]
+transform_format = 1
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ng4nb"]
+size = Vector2(10, 10)
+
+[node name="City3D" type="Node3D"]
+script = ExtResource("1_epjle")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 300, 0)
+current = true
+fov = 77.3
+far = 10000.0
+script = ExtResource("2_e3nog")
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("PlaneMesh_fxfsi")
+
+[node name="Houses" type="Node3D" parent="."]
+
+[node name="WallsMultiMesh" type="MultiMeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+multimesh = SubResource("MultiMesh_s3xvh")
+
+[node name="RoofsMultiMesh" type="MultiMeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+multimesh = SubResource("MultiMesh_v0lll")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0.707107, -0.707107, 0, 0.707107, 0.707107, 1, 3.09086e-08, -3.09086e-08, 0, 0, 0)
+light_energy = 0.5
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0.707107, 0.707107, 0, -0.707107, 0.707107, 1, 3.09086e-08, 3.09086e-08, 0, 0, 0)
+light_energy = 0.5
+
+[node name="DirectionalLight3D3" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-4.37114e-08, 1, 0, -0.707107, -3.09086e-08, 0.707107, 0.707107, 3.09086e-08, 0.707107, 0, 0, 0)
+light_energy = 0.5
+
+[node name="DirectionalLight3D4" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-4.37114e-08, 1, 0, 0.707107, 3.09086e-08, 0.707107, 0.707107, 3.09086e-08, -0.707107, 0, 0, 0)
+light_energy = 0.5
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="UI3D" parent="CanvasLayer" instance=ExtResource("3_jkqxy")]
+
+[node name="RefMeshes" type="Node3D" parent="."]
+visible = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RefMeshes"]
+mesh = SubResource("PlaneMesh_ng4nb")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D11" type="MeshInstance3D" parent="RefMeshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 160, 0, 0)
+mesh = SubResource("PlaneMesh_ng4nb")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="RefMeshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 20)
+mesh = SubResource("PlaneMesh_ng4nb")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="RefMeshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 40)
+mesh = SubResource("PlaneMesh_ng4nb")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="RefMeshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 60)
+mesh = SubResource("PlaneMesh_ng4nb")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="RefMeshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 80)
+mesh = SubResource("PlaneMesh_ng4nb")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="RefMeshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 100)
+mesh = SubResource("PlaneMesh_ng4nb")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="RefMeshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 120)
+mesh = SubResource("PlaneMesh_ng4nb")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D8" type="MeshInstance3D" parent="RefMeshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 140)
+mesh = SubResource("PlaneMesh_ng4nb")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D9" type="MeshInstance3D" parent="RefMeshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 160)
+mesh = SubResource("PlaneMesh_ng4nb")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D10" type="MeshInstance3D" parent="RefMeshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 180)
+mesh = SubResource("PlaneMesh_ng4nb")
+skeleton = NodePath("../..")
