@@ -1,0 +1,28 @@
+[gd_scene load_steps=6 format=3 uid="uid://bgmmcnq1e31dc"]
+
+[ext_resource type="Script" path="res://src/3d/house.gd" id="1_f1n7x"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r5jm3"]
+render_priority = -1
+albedo_color = Color(0.0117647, 0.203922, 0.431373, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_322vd"]
+material = SubResource("StandardMaterial3D_r5jm3")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_64tro"]
+render_priority = 8
+albedo_color = Color(0.886275, 0.886275, 0.713726, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_vmg85"]
+material = SubResource("StandardMaterial3D_64tro")
+size = Vector2(1, 1)
+
+[node name="House" type="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.507486, 0)
+mesh = SubResource("BoxMesh_322vd")
+skeleton = NodePath("../..")
+script = ExtResource("1_f1n7x")
+
+[node name="Roof" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("PlaneMesh_vmg85")

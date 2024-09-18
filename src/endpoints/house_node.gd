@@ -3,6 +3,7 @@ extends EndpointNode
 
 var placed := false
 
+
 ## Colors the house either red (state: true) or black (state: false)
 func set_allocated_state(state: bool) -> void:
 	if state:
