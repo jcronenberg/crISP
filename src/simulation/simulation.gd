@@ -21,8 +21,7 @@ var _network_sim: NetworkSim = NetworkSim.new()
 # var _network_sim_worker_thread: Thread = Thread.new()
 
 func _ready() -> void:
-	_network_sim.add_wan(%WANPort)
-	_network_sim.connect("houses_allocated", _on_network_sim_houses_allocated)
+	_setup_new_net_sim()
 
 
 func _physics_process(_delta: float) -> void:
@@ -116,6 +115,23 @@ func delete_selected_nodes() -> void:
 	selected_nodes = []
 
 
+func reset_all() -> void:
+	for child in %Houses.get_children():
+		child.queue_free()
+
+	for child in %Cables.get_children():
+		child.queue_free()
+
+	for child in %Parks.get_children():
+		child.queue_free()
+
+	for child in %Switches.get_children():
+		child.queue_free()
+
+	_network_sim = NetworkSim.new()
+	_setup_new_net_sim()
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("Use") and not Input.is_action_pressed("SelectMultiple"):
 		var space_rid: RID = get_world_2d().space
@@ -136,3 +152,9 @@ func _on_network_sim_houses_allocated(allocated: bool) -> void:
 		game_ui.hide_warning()
 	else:
 		game_ui.display_warning("Warning")
+
+
+func _setup_new_net_sim() -> void:
+	_network_sim.add_wan(%WANPort)
+	if not _network_sim.houses_allocated.is_connected(_on_network_sim_houses_allocated):
+		_network_sim.houses_allocated.connect(_on_network_sim_houses_allocated)

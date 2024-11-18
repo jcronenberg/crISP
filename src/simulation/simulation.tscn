@@ -1,9 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://g7prnvkrx7xb"]
+[gd_scene load_steps=6 format=3 uid="uid://g7prnvkrx7xb"]
 
 [ext_resource type="Script" path="res://src/simulation/simulation.gd" id="1_f7ilh"]
 [ext_resource type="Script" path="res://addons/map_camera_2d/map_camera_2d.gd" id="2_kqftb"]
 [ext_resource type="PackedScene" uid="uid://c75ksq31jylr" path="res://src/endpoints/wan_port.tscn" id="5_tgaow"]
 [ext_resource type="Script" path="res://src/proc_gen/city_gen.gd" id="9_wiy4f"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_omqam"]
+frequency = 0.15
 
 [node name="Simulation" type="Node2D"]
 script = ExtResource("1_f7ilh")
@@ -33,3 +36,4 @@ unique_name_in_owner = true
 
 [node name="CityGen" type="Node2D" parent="."]
 script = ExtResource("9_wiy4f")
+noise = SubResource("FastNoiseLite_omqam")
