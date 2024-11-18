@@ -29,6 +29,7 @@ func set_camera_pos(pos: Vector2, zoom: Vector2) -> void:
 func populate_multi_meshes() -> void:
 	var new_house_mesh: BoxMesh = BoxMesh.new()
 	new_house_mesh.set_size(Vector3(1, 10, 1))
+	# var house_material: StandardMaterial3D = load("res://resources/orange_placeholder.tres")
 	var house_material: StandardMaterial3D = StandardMaterial3D.new()
 	house_material.albedo_color = Color("#03346e")
 	new_house_mesh.material = house_material
