@@ -24,6 +24,13 @@ var id_counter: int = 1 # Start at 1 because 0 is WAN
 var path_calculator: NetworkAStar = NetworkAStar.new()
 
 
+func _init() -> void:
+	# We place a placeholder wan endpoint to avoid race conditions.
+	# Wan should always be at endpoints[0].
+	var placeholder_wan: Endpoint = WanEndpoint.new()
+	endpoints.append(placeholder_wan)
+
+
 ## Runs a single step of the simulation
 func sim_step() -> void:
 	reset_bandwidth_state()
@@ -35,7 +42,7 @@ func add_wan(wan_node: WanPort) -> void:
 	# Add WANPort as first endpoint
 	var wan: Endpoint = WanEndpoint.new()
 	wan.node_ref = wan_node
-	endpoints.append(wan)
+	endpoints[0] = wan
 	path_calculator.add_point(0, Vector2(0, 0))
 
 
