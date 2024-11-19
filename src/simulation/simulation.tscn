@@ -32,10 +32,10 @@ unique_name_in_owner = true
 
 [node name="Switches" type="Node2D" parent="."]
 unique_name_in_owner = true
+z_index = 1
 
 [node name="Houses" type="Node2D" parent="."]
 unique_name_in_owner = true
-visible = false
 z_index = 1
 
 [node name="Parks" type="Node2D" parent="."]

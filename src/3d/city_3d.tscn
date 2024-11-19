@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://mucs664lhk16"]
+[gd_scene load_steps=17 format=3 uid="uid://mucs664lhk16"]
 
 [ext_resource type="Script" path="res://src/3d/city_3d.gd" id="1_epjle"]
 [ext_resource type="Script" path="res://src/3d/camera_3d.gd" id="2_e3nog"]
-[ext_resource type="PackedScene" uid="uid://bxgej476jhan7" path="res://src/3d/ui_3d.tscn" id="3_jkqxy"]
+[ext_resource type="PackedScene" uid="uid://dldsngn1k2t16" path="res://src/3d/ui_3d.tscn" id="3_jkqxy"]
+[ext_resource type="Script" path="res://src/3d/proc_gen.gd" id="4_0xleg"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0bj80"]
 albedo_color = Color(0.00784314, 0.0823529, 0.14902, 1)
@@ -17,8 +18,34 @@ transform_format = 1
 [sub_resource type="MultiMesh" id="MultiMesh_v0lll"]
 transform_format = 1
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2wi8y"]
+albedo_color = Color(0, 0.772549, 0, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_qeaw6"]
+material = SubResource("StandardMaterial3D_2wi8y")
+size = Vector2(1, 1)
+
+[sub_resource type="MultiMesh" id="MultiMesh_3u00t"]
+transform_format = 1
+mesh = SubResource("PlaneMesh_qeaw6")
+
 [sub_resource type="PlaneMesh" id="PlaneMesh_ng4nb"]
 size = Vector2(10, 10)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_i68bh"]
+frequency = 0.15
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gfaw0"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_obthc"]
+material = SubResource("StandardMaterial3D_gfaw0")
+radius = 2.0
+height = 4.0
+
+[sub_resource type="MultiMesh" id="MultiMesh_v34el"]
+transform_format = 1
+mesh = SubResource("SphereMesh_obthc")
 
 [node name="City3D" type="Node3D"]
 script = ExtResource("1_epjle")
@@ -43,6 +70,10 @@ multimesh = SubResource("MultiMesh_s3xvh")
 [node name="RoofsMultiMesh" type="MultiMeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 multimesh = SubResource("MultiMesh_v0lll")
+
+[node name="ParksMultiMesh" type="MultiMeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+multimesh = SubResource("MultiMesh_3u00t")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0.707107, -0.707107, 0, 0.707107, 0.707107, 1, 3.09086e-08, -3.09086e-08, 0, 0, 0)
@@ -121,3 +152,10 @@ skeleton = NodePath("../..")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 180)
 mesh = SubResource("PlaneMesh_ng4nb")
 skeleton = NodePath("../..")
+
+[node name="ProcGen" type="Node" parent="."]
+script = ExtResource("4_0xleg")
+noise = SubResource("FastNoiseLite_i68bh")
+
+[node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="ProcGen"]
+multimesh = SubResource("MultiMesh_v34el")

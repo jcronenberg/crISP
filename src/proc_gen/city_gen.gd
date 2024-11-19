@@ -55,7 +55,7 @@ func _ready() -> void:
 	# generate_grid()
 	#_generate_grid_cell_at(0, 0)
 	#_generated_cells += 1
-	%City3D.ready.connect(generate_grid)
+	# %City3D.ready.connect(generate_grid)
 
 	if visible:
 		_generate_buildings()
@@ -63,6 +63,7 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	return
 	if not noise:
 		push_error("No noise set")
 		return
