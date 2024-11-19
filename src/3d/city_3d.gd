@@ -1,3 +1,4 @@
+class_name City3D
 extends Node3D
 
 const building_scene = preload("res://src/3d/house.tscn")
@@ -5,7 +6,8 @@ const building_scene = preload("res://src/3d/house.tscn")
 #var zoom_factor: float = 1
 @onready var walls_multmesh: MultiMesh = $RoofsMultiMesh.multimesh
 @onready var roofs_multmesh: MultiMesh = $WallsMultiMesh.multimesh
-var buildings: Array[BuildingInstance3D] = []
+@onready var parks_multmesh: MultiMesh = $ParksMultiMesh.multimesh
+var objects: Array[CityObjectInstance3D] = []
 
 
 func _ready() -> void:
@@ -49,39 +51,55 @@ func populate_multi_meshes() -> void:
 	roofs_multmesh.instance_count = 16384
 	roofs_multmesh.visible_instance_count = 0
 
+	parks_multmesh.use_colors = true
+	parks_multmesh.instance_count = 16384
+	parks_multmesh.visible_instance_count = 0
+
 
 func place_building(pos: Vector2, width: int, height: float) -> void:
-	var building: BuildingInstance3D = BuildingInstance3D.new(buildings.size(), width, height, pos)
-	walls_multmesh.visible_instance_count = buildings.size() + 1
-	roofs_multmesh.visible_instance_count = buildings.size() + 1
+	var building: CityObjectInstance3D = CityObjectInstance3D.new(objects.size(), Vector2(width, width), height, pos)
+	objects.append(building)
+	walls_multmesh.visible_instance_count = objects.size()
+	roofs_multmesh.visible_instance_count = objects.size()
 	_place_building_instance(building)
-	buildings.append(building)
 
 
-func _place_building_instance(building: BuildingInstance3D) -> void:
+func _place_building_instance(building: CityObjectInstance3D) -> void:
 	walls_multmesh.set_instance_transform(building.index,
-			Transform3D(Basis().scaled(Vector3(building.width, building.height, building.width)), Vector3(building.pos.x, building.height * 5, building.pos.y)))
+		Transform3D(Basis().scaled(Vector3(building.width.x, building.height, building.width.y)), Vector3(building.pos.x, building.height * 5, building.pos.y)))
 	roofs_multmesh.set_instance_transform(building.index,
-			Transform3D(Basis().scaled(Vector3(building.width, 1, building.width)), Vector3(building.pos.x, building.height * 10 + 0.1, building.pos.y)))
+		Transform3D(Basis().scaled(Vector3(building.width.x, 1, building.width.y)), Vector3(building.pos.x, building.height * 10 + 0.1, building.pos.y)))
 
 
-class BuildingInstance3D:
-	signal building_changed(building: BuildingInstance3D)
+func place_park(pos: Vector2, width: int) -> void:
+	var park: CityObjectInstance3D = CityObjectInstance3D.new(objects.size(), Vector2(width, width), 0, pos)
+	objects.append(park)
+	parks_multmesh.visible_instance_count = objects.size()
+	_place_park_instance(park)
 
-	var index: int # Index of building in building array
-	var width: int
+
+func _place_park_instance(park: CityObjectInstance3D) -> void:
+	parks_multmesh.set_instance_transform(park.index,
+		Transform3D(Basis().scaled(Vector3(park.width.x, park.height, park.width.y)), Vector3(park.pos.x + park.width.x / 2, park.height, park.pos.y + park.width.y / 2)))
+
+
+class CityObjectInstance3D:
+	# signal building_changed(building: CityObjectInstance3D)
+
+	var index: int # Index of building in objects array
+	var width: Vector2
 	var height: float
 	var pos: Vector2
 
-	func _init(init_index: int, init_width: int, init_height: float, init_pos: Vector2) -> void:
+	func _init(init_index: int, init_width: Vector2, init_height: float, init_pos: Vector2) -> void:
 		index = init_index
 		width = init_width
 		height = init_height
 		pos = init_pos
 
 
-	func set_values(new_width: int, new_height: float, new_pos: Vector2) -> void:
+	func set_values(new_width: Vector2, new_height: float, new_pos: Vector2) -> void:
 		width = new_width
 		height = new_height
 		pos = new_pos
-		building_changed.emit(self)
+		# building_changed.emit(self)
