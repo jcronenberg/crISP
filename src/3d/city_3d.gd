@@ -52,7 +52,7 @@ func populate_multi_meshes() -> void:
 
 func place_building(pos: Vector2, width: int, height: float) -> void:
 	var building: BuildingInstance3D = BuildingInstance3D.new(buildings.size(), width, height, pos)
-	walls_multmesh.visible_instance_count = buildings.size()
+	walls_multmesh.visible_instance_count = buildings.size() + 1
 	roofs_multmesh.visible_instance_count = buildings.size() + 1
 	_place_building_instance(building)
 	buildings.append(building)
