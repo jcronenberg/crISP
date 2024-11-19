@@ -37,8 +37,10 @@ var _major_steets_horiz: Array[Array] = []
 
 
 func _ready() -> void:
-	_city.ready.connect(generate_grid)
+	# _city.ready.connect(generate_grid)
 	# _draw_line(Vector2(0, 0), Vector2(100, 100), 10)
+
+	# _draw_river(Vector2(0, -1024), Vector2(0, 1024), 10, 400, 200, 200)
 	pass
 
 
@@ -63,6 +65,7 @@ func generate_grid() -> void:
 		_major_steets_horiz.append([cur_start_pos, to])
 		cur_start_pos.y += randi_range(40, 60)
 
+	return
 	# Draw intersection points
 	var mult_mesh: MultiMeshInstance3D = $MultiMeshInstance3D
 	mult_mesh.multimesh.instance_count = 16384
@@ -78,26 +81,43 @@ func generate_grid() -> void:
 
 
 func _draw_line(from: Vector2, to: Vector2, width: float) -> void:
-	var mesh_instance: MeshInstance3D = MeshInstance3D.new()
 	var material: StandardMaterial3D = StandardMaterial3D.new()
 	material.albedo_color = Color.YELLOW
 
-	var st: SurfaceTool = SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var vertices: PackedVector2Array = PackedVector2Array()
 	var diff: Vector2 = to - from
 	var normal: Vector2 = diff.rotated(TAU/4).normalized()
 	var offset: Vector2 = normal * width * 0.5
 	vertices = [from + offset, to + offset, to - offset, from - offset]
-	var new_vertices: PackedVector3Array = []
-	var triangulated: PackedInt32Array = Geometry2D.triangulate_polygon(vertices)
-	for point in triangulated:
-		new_vertices.append(Vector3(vertices[point].x, 0, vertices[point].y))
 
-	for vertice in new_vertices:
-		st.add_vertex(vertice)
+	var mesh: MeshInstance3D = _flat_3d_mesh_from_2d_outlines(vertices)
+	mesh.material_override = material
 
-	mesh_instance.mesh = st.commit()
-	mesh_instance.material_override = material
+	add_child(mesh)
 
-	add_child(mesh_instance)
+
+func _flat_3d_mesh_from_2d_outlines(points: PackedVector2Array) -> MeshInstance3D:
+	var mesh_instance: MeshInstance3D = MeshInstance3D.new()
+	mesh_instance.mesh = flat_3d_mesh_from_2d_outlines(points)
+	return mesh_instance
+
+
+static func flat_3d_mesh_from_2d_outlines(points: PackedVector2Array) -> ArrayMesh:
+	# Convert the 2d outline into all required triangles to construct a 2d polygon.
+	var triangulated_points: PackedInt32Array = Geometry2D.triangulate_polygon(points)
+	if triangulated_points.size() == 0:
+		return null
+
+	var triangle_points: PackedVector3Array = []
+	# Store all the triangles with a height of 0.
+	for point in triangulated_points:
+		triangle_points.append(Vector3(points[point].x, 0, points[point].y))
+
+	# Convert the triangles to a mesh via SurfaceTool.
+	var st: SurfaceTool = SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for triangle_point in triangle_points:
+		st.add_vertex(triangle_point)
+
+	# Create mesh and return it.
+	return st.commit()
