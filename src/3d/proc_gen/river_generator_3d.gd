@@ -1,4 +1,4 @@
-class_name RiverGenerator
+class_name RiverGenerator3D
 extends Node
 
 @export var width_curve: Curve:

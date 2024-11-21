@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" path="res://src/3d/city_3d.gd" id="1_epjle"]
 [ext_resource type="Script" path="res://src/3d/camera_3d.gd" id="2_e3nog"]
-[ext_resource type="PackedScene" uid="uid://dldsngn1k2t16" path="res://src/3d/ui_3d.tscn" id="3_jkqxy"]
+[ext_resource type="PackedScene" uid="uid://bxgej476jhan7" path="res://src/3d/ui_3d.tscn" id="3_jkqxy"]
 [ext_resource type="Script" path="res://src/3d/proc_gen/proc_gen.gd" id="4_0xleg"]
-[ext_resource type="Script" path="res://src/3d/proc_gen/river_generator.gd" id="5_ikriw"]
+[ext_resource type="Script" path="res://src/3d/proc_gen/river_generator_3d.gd" id="5_ikriw"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0bj80"]
 albedo_color = Color(0.00784314, 0.0823529, 0.14902, 1)
